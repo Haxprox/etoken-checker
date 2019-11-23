@@ -9,7 +9,13 @@ etokenID=$(lsusb -d 0529:0600) # Testing single Alading eToken ID
 loopTimer=3
 
 help() {
-	
+	echo "Usage: $0 [option...] {--help|--nolock|}" >&2
+    echo
+    echo "-h, --help	show this dialog"
+    echo "-s  --showp	show processes use eToken"
+    echo "-n, --nolock	suppress DE locker and don't lock current session"
+    echo
+    exit 1
 }
 
 processFinder() {
@@ -17,6 +23,25 @@ processFinder() {
 	echo "$pnames"
 }
 
-main() {
-	
+etokenSpy() { # here is parameter to suppress locker session
+	while :
+	do
+		sleep $loopTimer
+	done
 }
+
+case "$1" in
+	-h | --help)
+		help
+	;;
+	-n | --nolock)
+		etokenSpy 
+	;;
+	-s | --showp)
+		processFinder
+	;;
+	*)
+		etokenSpy
+	;;	
+esac
+
