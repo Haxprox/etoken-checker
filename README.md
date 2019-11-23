@@ -1,6 +1,6 @@
 ## eToken-checker
 
 Background bash process is watching for eToken USB serial status and make decision
-for killing all processes were authorized by the eToken.
+for killing all processes that were authorized by the eToken.
 
-The script covers the next processes: VeraCrypt crypted volumes and their unmounting, OpenVPN and SSH disconnectng sessions, PAM screenlocker caller.
+The script covers the next processes: VeraCrypt crypted volumes and their unmounting, OpenVPN and SSH disconnecting sessions, screenlocker caller and PAM auth.
