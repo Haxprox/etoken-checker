@@ -3,6 +3,8 @@
 # Optional '--help', '--processFinder' and '--nolock'  parameters are available.
 # The script should be runnable as a daemon with empty parameters.
 
+# Terminating sequence: SSH, OpenVPN, VeraCrypt and locking(none locking)
+
 ETOKENID	= $(lsusb -d 0529:0600) # Testing single Alading eToken ID
 LOOPTIMER	= 3
 
@@ -17,24 +19,29 @@ help() {
 }
 
 processFinder() {
-	local pnames=$(lsof /usr/lib/libeToken.so | cut -d' ' -f1)
+	local pnames=$(lsof /usr/lib/libeToken.so | cut -d' ' -f 1-5)
 	echo "$pnames"
 }
 
 etokenSpy() { # here is parameter to suppress locker session
 	case "$1" in
 		-n | --lock)
-			while : do
-				sleep $LOOPTIMER
-				if
+			while : ; do
+				if ($ETOKENID); then
+					sleep $LOOPTIMER
+					;
+				else
 					
 				fi
 			done
 		;;
 		*)
-			while : do
-				sleep $LOOPTIMER
-				if
+			while : ; do
+				//
+				if ($ETOKENID); then
+					sleep $LOOPTIMER
+					;
+				else
 					
 				fi
 			done
@@ -47,7 +54,7 @@ case "$1" in
 		help
 	;;
 	-n | --nolock)
-		etokenSpy 
+		etokenSpy --nolock
 	;;
 	-s | --showp)
 		processFinder
