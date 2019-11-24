@@ -20,7 +20,7 @@ help() {
 }
 
 pFinder() {
-	if [ $LSOF && -f /usr/lib/libeToken.so ]; then
+	if [ -x $LSOF ] && [ -e /usr/lib/libeToken.so ]; then
 		$LSOF /usr/lib/libeToken.so | cut -d' ' -f 1-5
 	else
 		echo "There is no lsof command or 'libeToken.so' file has been found"
@@ -28,7 +28,7 @@ pFinder() {
 	
 }
 
-eSpy() { # here is parameter to suppress locker session
+eSpy() {
 	case "$1" in
 		-n | --nolock)
 			while : ; do
@@ -37,6 +37,7 @@ eSpy() { # here is parameter to suppress locker session
 					;
 				else
 					killall # Array of processes
+					echo "eToken related processes have been killed"
 					break
 				fi
 			done
@@ -48,6 +49,7 @@ eSpy() { # here is parameter to suppress locker session
 					;
 				else
 					killall # Array of processes
+					echo "eToken related processes have been killed and locked"
 					break
 				fi
 			done
