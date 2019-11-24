@@ -5,6 +5,14 @@
 
 # Terminating sequence: SSH, OpenVPN, VeraCrypt and locking(none locking) DE (xfce4) session.
 
+###################################################################
+# Script Name	:	ewatcher.sh
+# Description	:	
+# Args			:	
+# Author		:	Jaroslav Popel
+# Email			:	haxprox@gmail.com
+###################################################################
+
 LOOPTIMER=5
 LSOF=/usr/bin/lsof
 
