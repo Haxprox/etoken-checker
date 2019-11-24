@@ -27,7 +27,7 @@ pFinder() {
 	fi
 }
 
-pKiller() {
+pKiller() { # Process killer
 	local i
 	for i in $(pidof ssh openvpn); do
 		if ( kill -9 $i ); then
@@ -54,12 +54,13 @@ lockFinder() {
 	return 0
 }
 
-eAgent() {
+eAgent() { # Loop agent. Always stay online and watching for eToken status
 	case "$1" in
 		-n | --nolock)
 			while : ; do
 				local timestamp=$(date +%Y-%m-%d_%H-%M-%S)
-				local etokenID=$(lsusb -d 0529:0600) # Testing single Alading eToken ID. Any card or token should be detected automatically here.
+				local etokenID=$(lsusb -d 0529:0600) # Testing single Alading eToken ID,
+				# any card or token should be detected automatically here.
 				sleep $LOOPTIMER
 				if [ -n "$etokenID" ]; then
 					echo "eToken $etokenID is online now - $timestamp"
@@ -74,7 +75,8 @@ eAgent() {
 		*)
 			while : ; do
 				local timestamp=$(date +%Y-%m-%d_%H-%M-%S)
-				local etokenID=$(lsusb -d 0529:0600) # Testing single Alading eToken ID. Any card or token should be detected automatically here.
+				local etokenID=$(lsusb -d 0529:0600) # Testing single Alading eToken ID,
+				# any card or token should be detected automatically here.
 				sleep $LOOPTIMER
 				if [ -n "$etokenID" ]; then
 					echo "eToken $etokenID is online now - $timestamp"
