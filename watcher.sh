@@ -5,7 +5,7 @@
 
 # Terminating sequence: SSH, OpenVPN, VeraCrypt and locking(none locking) DE (xfce4) session.
 
-ETOKENID=$(lsusb -d 0529:0600) # Testing single Alading eToken ID
+ETOKENID=$(lsusb -d 0529:0600) # Testing single Alading eToken ID. Any card or token should be detected automatically here.
 LOOPTIMER=3
 LSOF=/usr/bin/lsof
 
@@ -29,13 +29,13 @@ pFinder() {
 pKiller() {
 	local i
 	for i in $(pidof ssh openvpn); do
-		killall -9 $i; echo "$i users' session has been killed"
-		sleep 2
+		kill -9 $i && echo "$i users' session has been killed"
+		sleep $LOOPTIMER
 	done
 	# Veracrypt provides unmount volume possibilities not being as root,
 	# just when the volumes mounted as read-only.
 	# You need to be in the appropriate group to unmount all volumes.
-	veracrypd -d; echo "Veracrypt users' containers have been unmounted"
+	veracrypt -d; echo "Veracrypt users' containers have been unmounted"
 }
 
 lockFinder() {
