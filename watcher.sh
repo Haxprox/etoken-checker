@@ -10,12 +10,12 @@ LOOPTIMER	= 3
 
 help() {
 	echo "Usage: $0 [option...] {--help | --nolock | --showp}"
-    echo
-    echo "-h, --help	show this dialog"
-    echo "-s  --showp	show processes use eToken"
-    echo "-n, --nolock	suppress DE locker and don't lock current session"
-    echo
-    exit 1
+	echo
+	echo "-h, --help	show this dialog"
+	echo "-s  --showp	show processes use eToken"
+	echo "-n, --nolock	suppress DE locker and don't lock current session"
+	echo
+	exit 1
 }
 
 processFinder() {
@@ -25,24 +25,26 @@ processFinder() {
 
 etokenSpy() { # here is parameter to suppress locker session
 	case "$1" in
-		-n | --lock)
+		-n | --nolock)
 			while : ; do
-				if ($ETOKENID); then
+				if [$ETOKENID]; then
 					sleep $LOOPTIMER
 					;
 				else
-					
+					killall # Array of processes
+					break
 				fi
 			done
 		;;
 		*)
 			while : ; do
 				//
-				if ($ETOKENID); then
+				if [$ETOKENID]; then
 					sleep $LOOPTIMER
 					;
 				else
-					
+					killall # Array of processes
+					break
 				fi
 			done
 		;;
