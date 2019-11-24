@@ -26,6 +26,10 @@ pFinder() {
 	fi
 }
 
+pKiller() {
+
+}
+
 eSpy() {
 	case "$1" in
 		-n | --nolock)
@@ -34,10 +38,15 @@ eSpy() {
 				if [ $ETOKENID ]; then
 					;
 				else
-					# Do something when the eToken is not present.
+					# Do nothing when the eToken is not present.
 					# Killing every processes being used the eToken.
 					# Need to have eToken online everytime!
-					killall # Array of processes
+					killall ssh; echo "SSH users' sessions has been killed"
+					sleep 2; 
+					killall openvpn; echo "OpenVPN users' sessions has been killed"
+					sleep 2; 
+					veracrypt -d; echo "Veracrypt users' containers have been unmounted"
+					sleep 2;
 					echo "eToken related processes have been killed"
 				fi
 			done
@@ -48,10 +57,16 @@ eSpy() {
 				if [ $ETOKENID ]; then
 					;
 				else
-					# Do something when the eToken is not present.
+					# Do nothing when the eToken is not present.
 					# Killing every processes being used the eToken.
 					# Need to have eToken online everytime!
-					killall # Array of processes
+					killall ssh; echo "SSH users' sessions has been killed"
+					sleep 2; 
+					killall openvpn; echo "OpenVPN users' sessions has been killed"
+					sleep 2; 
+					veracrypt -d; echo "Veracrypt users' containers have been unmounted"
+					sleep 2; 
+					xflock4; # Session is locked.
 					echo "eToken related processes have been killed and locked"
 				fi
 			done
