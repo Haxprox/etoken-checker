@@ -3,7 +3,7 @@
 #############################################################################################################################################################################
 # Script Name	:	ewatcher.sh
 # Description	:	Background bash process is watching for eToken USB serial status and makes decision for killing all processes that were authorized by the eToken.
-#				:	Terminating sequence: SSH, OpenVPN, VeraCrypt and locking(none locking) DE session.
+# Terminating sequence: SSH, OpenVPN, VeraCrypt and locking(none locking) DE session.
 # Args			:	Optional {'-h | --help', '-s | --showp' and '-n | --nolock'}
 # Author		:	Jaroslav Popel
 # Email			:	haxprox@gmail.com
@@ -63,11 +63,12 @@ eAgent() { # Loop agent. Always stay online and watching for eToken status
 		-n | --nolock)
 			while : ; do
 				local timestamp=$(date +%Y-%m-%d_%H-%M-%S)
-				local etokenID=$(lsusb -d 0529:0600) # Testing single Alading eToken ID,
+				local etokenID=$(lsusb -d 0529:0600) 
+				# Testing single Alading eToken ID,
 				# any card or token should be detected automatically here.
 				sleep $LOOPTIMER
 				if [ -n "$etokenID" ]; then
-					echo "eToken $etokenID is online now - $timestamp"
+					echo -e "eToken $etokenID is \e[5monline\e[25m now - $timestamp" # Spinner here?
 					continue
 				else
 					# Need to have eToken online every time because it kills
@@ -79,11 +80,12 @@ eAgent() { # Loop agent. Always stay online and watching for eToken status
 		*)
 			while : ; do
 				local timestamp=$(date +%Y-%m-%d_%H-%M-%S)
-				local etokenID=$(lsusb -d 0529:0600) # Testing single Alading eToken ID,
+				local etokenID=$(lsusb -d 0529:0600)
+				# Testing single Alading eToken ID,
 				# any card or token should be detected automatically here.
 				sleep $LOOPTIMER
 				if [ -n "$etokenID" ]; then
-					echo "eToken $etokenID is online now - $timestamp"
+					echo -e "eToken $etokenID is \e[5monline\e[25m now - $timestamp" # Spinner here?
 					continue
 				else
 					# Need to have eToken online every time because it kills
