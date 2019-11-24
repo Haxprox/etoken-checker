@@ -27,7 +27,12 @@ pFinder() {
 }
 
 pKiller() {
-	echo "Hello"
+	local i
+	for i in $(pidof ssh openvpn); do
+		killall $i; echo "$i users' session has been killed"
+		sleep 2
+	done
+	veracrypd -d; echo "Veracrypt users' containers have been unmounted"
 }
 
 eSpy() {
@@ -41,12 +46,7 @@ eSpy() {
 					# Do nothing when the eToken is not present.
 					# Killing every processes being used the eToken.
 					# Need to have eToken online everytime!
-					killall ssh; echo "SSH users' sessions has been killed"
-					sleep 2; 
-					killall openvpn; echo "OpenVPN users' sessions has been killed"
-					sleep 2; 
-					veracrypt -d; echo "Veracrypt users' containers have been unmounted"
-					sleep 2;
+					pKiller
 					echo "eToken related processes have been killed"
 				fi
 			done
@@ -60,12 +60,7 @@ eSpy() {
 					# Do nothing when the eToken is not present.
 					# Killing every processes being used the eToken.
 					# Need to have eToken online everytime!
-					killall ssh; echo "SSH users' sessions has been killed"
-					sleep 2; 
-					killall openvpn; echo "OpenVPN users' sessions has been killed"
-					sleep 2; 
-					veracrypt -d; echo "Veracrypt users' containers have been unmounted"
-					sleep 2; 
+					pKiller
 					xflock4; # Session is locked.
 					echo "eToken related processes have been killed and locked"
 				fi
