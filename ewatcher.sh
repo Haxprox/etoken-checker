@@ -35,9 +35,9 @@ pKiller() { # Process killer
 	local i
 	for i in $(pidof ssh openvpn); do
 		if ( kill -9 $i ); then
-			echo "$i users' session has been killed"
+			echo -e "$i users' session has been killed"
 		else
-			echo "Permission denied. Need to be root to kill $i"
+			echo -e "Permission denied. Need to be root to kill \e[41m$i\e[0m"
 		fi
 		sleep 1
 	done
@@ -45,9 +45,9 @@ pKiller() { # Process killer
 	# just when the volumes mounted as read-only.
 	# You need to be in the appropriate group to unmount all volumes.
 	if ( veracrypt -d ); then
-		echo "Veracrypt users' containers have been unmounted"
+		echo -e "Veracrypt users' containers have been unmounted"
 	else
-		echo "Permission denied. Need to be root to kill Veracrypt container"
+		echo -e "Permission denied. Need to be root to kill Veracrypt container"
 		return 126
 	fi
 	return 0
@@ -68,11 +68,13 @@ eAgent() { # Loop agent. Always stay online and watching for eToken status
 				# any card or token should be detected automatically here.
 				sleep $LOOPTIMER
 				if [ -n "$etokenID" ]; then
-					echo -e "eToken $etokenID is \e[5monline\e[25m now - $timestamp" # Spinner here?
+					clear
+					echo -e "eToken $etokenID is \e[102monline\e[0m now - $timestamp" # Spinner here?
 					continue
 				else
 					# Need to have eToken online every time because it kills
 					# every processes not being used the eToken either.
+					clear
 					pKiller && echo "eToken related processes have been killed - $timestamp"
 				fi
 			done
@@ -85,12 +87,14 @@ eAgent() { # Loop agent. Always stay online and watching for eToken status
 				# any card or token should be detected automatically here.
 				sleep $LOOPTIMER
 				if [ -n "$etokenID" ]; then
-					echo -e "eToken $etokenID is \e[5monline\e[25m now - $timestamp" # Spinner here?
+					clear
+					echo -e "eToken $etokenID is \e[102monline\e[0m now - $timestamp" # Spinner here?
 					continue
 				else
 					# Need to have eToken online every time because it kills
 					# every processes not being used the eToken either.
-					pKiller && echo "eToken related processes have been killed - $timestamp"
+					clear
+					pKiller && echo -e "eToken related processes have been killed - $timestamp"
 					# // xflock4 checker should be here in order to get rid
 					# // doing it every time.
 				fi
