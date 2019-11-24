@@ -29,10 +29,17 @@ pFinder() {
 pKiller() {
 	local i
 	for i in $(pidof ssh openvpn); do
-		killall $i; echo "$i users' session has been killed"
+		killall -9 $i; echo "$i users' session has been killed"
 		sleep 2
 	done
+	# Veracrypt provides unmount volume possibilities not being as root,
+	# just when the volumes mounted as read-only.
+	# You need to be in the appropriate group to unmount all volumes.
 	veracrypd -d; echo "Veracrypt users' containers have been unmounted"
+}
+
+lockFinder() {
+	echo "Nothing yet" # Detect DE's locker command. Xfce4 light-locker only supported.
 }
 
 eSpy() {
@@ -43,9 +50,8 @@ eSpy() {
 				if [ $ETOKENID ]; then
 					continue
 				else
-					# Do nothing when the eToken is not present.
-					# Killing every processes being used the eToken.
-					# Need to have eToken online everytime!
+					# Need to have eToken online every time because it kills
+					# every processes not being used the eToken either.
 					pKiller
 					echo "eToken related processes have been killed"
 				fi
@@ -57,11 +63,11 @@ eSpy() {
 				if [ $ETOKENID ]; then
 					continue
 				else
-					# Do nothing when the eToken is not present.
-					# Killing every processes being used the eToken.
-					# Need to have eToken online everytime!
+					# Need to have eToken online every time because it kills
+					# every processes not being used the eToken either.
 					pKiller
-					xflock4; # Session is locked.
+					# xflock4 checker should be here in order to get rid
+					# doing it every time.
 					echo "eToken related processes have been killed and locked"
 				fi
 			done
@@ -74,12 +80,14 @@ case "$1" in
 		help
 	;;
 	-n | --nolock)
+		# Some pretests here
 		eSpy --nolock
 	;;
 	-s | --showp)
 		pFinder
 	;;
 	*)
+		# Some pretests here
 		eSpy
 	;;	
 esac
