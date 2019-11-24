@@ -5,9 +5,9 @@
 
 # Terminating sequence: SSH, OpenVPN, VeraCrypt and locking(none locking) DE (xfce4) session.
 
-ETOKENID	= $(lsusb -d 0529:0600) # Testing single Alading eToken ID
-LOOPTIMER	= 3
-LSOF		= /usr/bin/lsof
+ETOKENID=$(lsusb -d 0529:0600) # Testing single Alading eToken ID
+LOOPTIMER=3
+LSOF=/usr/bin/lsof
 
 help() {
 	echo "Usage: $0 [option...] {--help | --nolock | --showp}"
@@ -27,7 +27,7 @@ pFinder() {
 }
 
 pKiller() {
-
+	echo "Hello"
 }
 
 eSpy() {
@@ -36,7 +36,7 @@ eSpy() {
 			while : ; do
 				sleep $LOOPTIMER
 				if [ $ETOKENID ]; then
-					;
+					continue
 				else
 					# Do nothing when the eToken is not present.
 					# Killing every processes being used the eToken.
@@ -55,7 +55,7 @@ eSpy() {
 			while : ; do
 				sleep $LOOPTIMER
 				if [ $ETOKENID ]; then
-					;
+					continue
 				else
 					# Do nothing when the eToken is not present.
 					# Killing every processes being used the eToken.
