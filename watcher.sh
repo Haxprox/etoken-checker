@@ -5,7 +5,7 @@
 
 # Terminating sequence: SSH, OpenVPN, VeraCrypt and locking(none locking) DE (xfce4) session.
 
-LOOPTIMER=3
+LOOPTIMER=5
 LSOF=/usr/bin/lsof
 
 help() {
@@ -30,13 +30,22 @@ pFinder() {
 pKiller() {
 	local i
 	for i in $(pidof ssh openvpn); do
-		kill -9 $i && echo "$i users' session has been killed"
-		sleep $LOOPTIMER
+		if ( kill -9 $i ); then
+			echo "$i users' session has been killed"
+		else
+			echo "Permission denied. Need to be root to kill $i"
+		fi
+		sleep 1
 	done
 	# Veracrypt provides unmount volume possibilities not being as root,
 	# just when the volumes mounted as read-only.
 	# You need to be in the appropriate group to unmount all volumes.
-	veracrypt -d && echo "Veracrypt users' containers have been unmounted"
+	if ( veracrypt -d ); then
+		echo "Veracrypt users' containers have been unmounted"
+	else
+		echo "Permission denied. Need to be root to kill Veracrypt container"
+		return 126
+	fi
 	return 0
 }
 
@@ -53,7 +62,7 @@ eAgent() {
 				local etokenID=$(lsusb -d 0529:0600) # Testing single Alading eToken ID. Any card or token should be detected automatically here.
 				sleep $LOOPTIMER
 				if [ -n "$etokenID" ]; then
-					echo "eToken is online"
+					echo "eToken $etokenID is online now - $timestamp"
 					continue
 				else
 					# Need to have eToken online every time because it kills
@@ -68,7 +77,7 @@ eAgent() {
 				local etokenID=$(lsusb -d 0529:0600) # Testing single Alading eToken ID. Any card or token should be detected automatically here.
 				sleep $LOOPTIMER
 				if [ -n "$etokenID" ]; then
-					echo "eToken is online"
+					echo "eToken $etokenID is online now - $timestamp"
 					continue
 				else
 					# Need to have eToken online every time because it kills
