@@ -1,17 +1,13 @@
 #!/bin/bash
 
-# Optional '--help', '--pFinder' and '--nolock'  parameters are available.
-# The script should be runnable as a daemon with empty parameters.
-
-# Terminating sequence: SSH, OpenVPN, VeraCrypt and locking(none locking) DE (xfce4) session.
-
-###################################################################
+#############################################################################################################################################################################
 # Script Name	:	ewatcher.sh
-# Description	:	
-# Args			:	
+# Description	:	Background bash process is watching for eToken USB serial status and makes decision for killing all processes that were authorized by the eToken.
+#				:	Terminating sequence: SSH, OpenVPN, VeraCrypt and locking(none locking) DE session.
+# Args			:	Optional {'-h | --help', '-s | --showp' and '-n | --nolock'}
 # Author		:	Jaroslav Popel
 # Email			:	haxprox@gmail.com
-###################################################################
+#############################################################################################################################################################################
 
 LOOPTIMER=5
 LSOF=/usr/bin/lsof
@@ -93,8 +89,8 @@ eAgent() { # Loop agent. Always stay online and watching for eToken status
 					# Need to have eToken online every time because it kills
 					# every processes not being used the eToken either.
 					pKiller && echo "eToken related processes have been killed - $timestamp"
-					# xflock4 checker should be here in order to get rid
-					# doing it every time.
+					# // xflock4 checker should be here in order to get rid
+					# // doing it every time.
 				fi
 			done
 		;;
