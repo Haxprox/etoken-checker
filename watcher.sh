@@ -5,7 +5,6 @@
 
 # Terminating sequence: SSH, OpenVPN, VeraCrypt and locking(none locking) DE (xfce4) session.
 
-ETOKENID=$(lsusb -d 0529:0600) # Testing single Alading eToken ID. Any card or token should be detected automatically here.
 LOOPTIMER=3
 LSOF=/usr/bin/lsof
 
@@ -47,7 +46,9 @@ eSpy() {
 		-n | --nolock)
 			while : ; do
 				sleep $LOOPTIMER
-				if [ $ETOKENID ]; then
+				local etokenID=$(lsusb -d 0529:0600) # Testing single Alading eToken ID. Any card or token should be detected automatically here.
+				if [ -n "$etokenID" ]; then
+					echo "eToken is online"
 					continue
 				else
 					# Need to have eToken online every time because it kills
@@ -60,7 +61,9 @@ eSpy() {
 		*)
 			while : ; do
 				sleep $LOOPTIMER
-				if [ $ETOKENID ]; then
+				local etokenID=$(lsusb -d 0529:0600) # Testing single Alading eToken ID. Any card or token should be detected automatically here.
+				if [ -n "$etokenID" ]; then
+					echo "eToken is online"
 					continue
 				else
 					# Need to have eToken online every time because it kills
