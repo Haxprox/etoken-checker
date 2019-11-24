@@ -30,27 +30,29 @@ eSpy() {
 	case "$1" in
 		-n | --nolock)
 			while : ; do
+				sleep $LOOPTIMER
 				if [ $ETOKENID ]; then
-					sleep $LOOPTIMER
 					;
 				else
-					# Do something when the eToken is not present
+					# Do something when the eToken is not present.
+					# Killing every processes being used the eToken.
+					# Need to have eToken online everytime!
 					killall # Array of processes
 					echo "eToken related processes have been killed"
-					break
 				fi
 			done
 		;;
 		*)
 			while : ; do
+				sleep $LOOPTIMER
 				if [ $ETOKENID ]; then
-					sleep $LOOPTIMER
 					;
 				else
-					# Do something when the eToken is not present
+					# Do something when the eToken is not present.
+					# Killing every processes being used the eToken.
+					# Need to have eToken online everytime!
 					killall # Array of processes
 					echo "eToken related processes have been killed and locked"
-					break
 				fi
 			done
 		;;
