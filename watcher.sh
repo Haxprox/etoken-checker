@@ -1,15 +1,13 @@
 #!/bin/bash
 
-# Optional 'help' and 'processFinder' parameters are available.
+# Optional '--help', '--processFinder' and '--nolock'  parameters are available.
 # The script should be runnable as a daemon with empty parameters.
 
-# - ? - Need to suppress screenlocker with separate parameter? 
-
-etokenID=$(lsusb -d 0529:0600) # Testing single Alading eToken ID
-loopTimer=3
+ETOKENID	= $(lsusb -d 0529:0600) # Testing single Alading eToken ID
+LOOPTIMER	= 3
 
 help() {
-	echo "Usage: $0 [option...] {--help|--nolock|}" >&2
+	echo "Usage: $0 [option...] {--help | --nolock | --showp}"
     echo
     echo "-h, --help	show this dialog"
     echo "-s  --showp	show processes use eToken"
@@ -24,10 +22,24 @@ processFinder() {
 }
 
 etokenSpy() { # here is parameter to suppress locker session
-	while :
-	do
-		sleep $loopTimer
-	done
+	case "$1" in
+		-n | --lock)
+			while : do
+				sleep $LOOPTIMER
+				if
+					
+				fi
+			done
+		;;
+		*)
+			while : do
+				sleep $LOOPTIMER
+				if
+					
+				fi
+			done
+		;;
+	esac
 }
 
 case "$1" in
