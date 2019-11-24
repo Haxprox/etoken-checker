@@ -16,7 +16,6 @@ help() {
 	echo "-s  --showp	show processes use eToken"
 	echo "-n, --nolock	suppress DE locker and don't lock current session"
 	echo
-	exit 1
 }
 
 pFinder() {
@@ -25,7 +24,6 @@ pFinder() {
 	else
 		echo "There is no lsof command or 'libeToken.so' file has been found"
 	fi
-	
 }
 
 eSpy() {
@@ -36,6 +34,7 @@ eSpy() {
 					sleep $LOOPTIMER
 					;
 				else
+					# Do something when the eToken is not present
 					killall # Array of processes
 					echo "eToken related processes have been killed"
 					break
@@ -48,6 +47,7 @@ eSpy() {
 					sleep $LOOPTIMER
 					;
 				else
+					# Do something when the eToken is not present
 					killall # Array of processes
 					echo "eToken related processes have been killed and locked"
 					break
