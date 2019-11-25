@@ -4,6 +4,7 @@
 # Script Name	:	ewatcher.sh
 # Description	:	Background bash process is watching for eToken USB serial status and makes decision for killing all processes that were authorized by the eToken.
 # Terminating sequence: SSH, OpenVPN, VeraCrypt and locking(none locking) DE session.
+
 # Args			:	Optional {'-h | --help', '-s | --showp' and '-n | --nolock'}
 # Author		:	Jaroslav Popel
 # Email			:	haxprox@gmail.com
@@ -44,6 +45,8 @@ pKiller() { # Process killer
 	# Veracrypt provides unmount volume possibilities not being as root,
 	# just when the volumes mounted as read-only.
 	# You need to be in the appropriate group to unmount all volumes.
+	#
+	# Umounting happens every $LOOPTIMER period even the token isn't connected.
 	if ( veracrypt -d ); then
 		echo -e "Veracrypt users' containers have been unmounted"
 	else
@@ -58,7 +61,9 @@ lockFinder() {
 	return 0
 }
 
-eAgent() { # Loop agent. Always stay online and watching for eToken status
+eAgent() { # Loop agent. Always stay online and watching for eToken status.
+		   # Need to rewrite this loop and kill it once if there no related processes have been found.
+		   # 'pFinder' function must be overviewed and pasted here as loop check statement. 
 	case "$1" in
 		-n | --nolock)
 			while : ; do
@@ -94,7 +99,7 @@ eAgent() { # Loop agent. Always stay online and watching for eToken status
 					# Need to have eToken online every time because it kills
 					# every processes not being used the eToken either.
 					clear
-					pKiller && echo -e "eToken related processes have been killed - $timestamp"
+					pKiller && echo -e "eToken related processes have been killed and locked - $timestamp"
 					# // xflock4 checker should be here in order to get rid
 					# // doing it every time.
 				fi
