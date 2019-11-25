@@ -24,12 +24,29 @@ help() {
 }
 
 pFinder() {
-	if [ -x $LSOF ] && [ -e /usr/lib/libeToken.so ]; then
-		$LSOF /usr/lib/libeToken.so | cut -d' ' -f 1-5
-	else
-		echo "There is no lsof command or 'libeToken.so' file has been found"
-		return 126
-	fi
+	case "$1" in
+		-c | --check)
+			if [ -x $LSOF ] && [ -e /usr/lib/libeToken.so ]; then
+				$LSOF /usr/lib/libeToken.so | cut -d' ' -f 1-5
+			else
+				echo "There is no lsof command or 'libeToken.so' file has been found"
+				return 126
+			fi
+		;;
+		-f | --find)
+			if [ -x $LSOF ] && [ -e /usr/lib/libeToken.so ]; then
+				local PID=$($LSOF -t /usr/lib/libeToken.so)
+				return $PID
+			else
+				echo "There is no lsof command or 'libeToken.so' file has been found"
+				return 126
+			fi
+		;;
+		*)
+			echo "Invalid option"
+			return 126
+		;;
+	esac
 }
 
 pKiller() { # Process killer
