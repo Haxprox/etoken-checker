@@ -36,7 +36,7 @@ pFinder() {
 		-f | --find)
 			if [ -x $LSOF ] && [ -e /usr/lib/libeToken.so ]; then
 				local PID=$($LSOF -t /usr/lib/libeToken.so)
-				return $PID
+				return $PID # So true as well. Just that who uses eToken provider.
 			else
 				echo "There is no lsof command or 'libeToken.so' file has been found"
 				return 126
@@ -51,13 +51,13 @@ pFinder() {
 
 pKiller() { # Process killer
 	local i
-	for i in $(pidof ssh openvpn); do
+	for i in $(pFinder --find); do
 		if ( kill -9 $i ); then
 			echo -e "$i users' session has been killed"
 		else
 			echo -e "Permission denied. Need to be root to kill \e[41m$i\e[0m"
 		fi
-		sleep 1
+		#sleep 1
 	done
 	# Veracrypt provides unmount volume possibilities not being as root,
 	# just when the volumes mounted as read-only.
@@ -85,20 +85,16 @@ eAgent() { # Loop agent. Always stay online and watching for eToken status.
 		-n | --nolock)
 			while : ; do
 				local timestamp=$(date +%Y-%m-%d_%H-%M-%S)
-				local etokenID=$(lsusb -d 0529:0600) 
+				local etokenID=$(lsusb -d 0529:0600)
 				# Testing single Alading eToken ID,
 				# any card or token should be detected automatically here.
-				sleep $LOOPTIMER
-				if [ -n "$etokenID" ]; then
-					clear
+				if [ -n "$etokenID" ]; then # Need to add pFinder function if order  to do it once
 					echo -e "eToken $etokenID is \e[102monline\e[0m now - $timestamp" # Spinner here?
 					continue
 				else
-					# Need to have eToken online every time because it kills
-					# every processes not being used the eToken either.
-					clear
-					pKiller && echo "eToken related processes have been killed - $timestamp"
+					pKiller && echo -e "eToken related processes have been killed and locked - $timestamp"
 				fi
+				sleep $LOOPTIMER
 			done
 		;;
 		*)
@@ -107,19 +103,13 @@ eAgent() { # Loop agent. Always stay online and watching for eToken status.
 				local etokenID=$(lsusb -d 0529:0600)
 				# Testing single Alading eToken ID,
 				# any card or token should be detected automatically here.
-				sleep $LOOPTIMER
-				if [ -n "$etokenID" ]; then
-					clear
+				if [ -n "$etokenID" ]; then # Need to add pFinder function if order  to do it once
 					echo -e "eToken $etokenID is \e[102monline\e[0m now - $timestamp" # Spinner here?
 					continue
 				else
-					# Need to have eToken online every time because it kills
-					# every processes not being used the eToken either.
-					clear
-					pKiller && echo -e "eToken related processes have been killed and locked - $timestamp"
-					# // xflock4 checker should be here in order to get rid
-					# // doing it every time.
+					pKiller && xflock4 && echo -e "eToken related processes have been killed and locked - $timestamp"
 				fi
+				sleep $LOOPTIMER
 			done
 		;;
 	esac
