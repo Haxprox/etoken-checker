@@ -124,7 +124,7 @@ case "$1" in
 		eAgent --nolock
 	;;
 	-s | --showp)
-		pFinder
+		pFinder --check
 	;;
 	*)
 		# Some pretests here
