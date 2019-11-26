@@ -81,8 +81,7 @@ lockFinder() {
 	return 0
 }
 
-eAgent() {
-	
+eAgent() {	
 	while : ; do
 		local timestamp=$(date +%Y-%m-%d_%H-%M-%S)
 		local etokenID=$(lsusb -d 0529:0600)
@@ -100,7 +99,7 @@ eAgent() {
 				;;
 				-l | --lock)
 					if ( ); then # One statement condition to do it once.
-						echo -e "eToken is out now. A system has been locked at \e[102m$timestamp\e[0m"
+						xflock4 && echo -e "eToken is out now. A system has been locked at \e[102m$timestamp\e[0m"
 					fi
 				;;
 				-k | --knlock)
@@ -116,7 +115,6 @@ eAgent() {
 		fi
 		sleep $LOOPTIMER
 	done
-
 }
 
 case "$1" in
