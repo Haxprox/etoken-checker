@@ -81,7 +81,7 @@ lockFinder() {
 	return 0
 }
 
-eAgent2() {
+eAgent() {
 	
 	while : ; do
 		local timestamp=$(date +%Y-%m-%d_%H-%M-%S)
