@@ -81,57 +81,42 @@ lockFinder() {
 	return 0
 }
 
-eAgent() { # Loop agent. Always stay online and watching for eToken status.
-		   # Need to rewrite this loop and kill it once if there no related processes have been found.
-		   # REWRITE THIS SHIT AS IT SO HUGE!!!!11
-		   # One 'while' loop and parsing parameters
-	case "$1" in
-		-n | --nolock) # Kill everyhing besides the locking.
-			while : ; do
-				local timestamp=$(date +%Y-%m-%d_%H-%M-%S)
-				local etokenID=$(lsusb -d 0529:0600)
-				# Testing single Alading eToken ID,
-				# any card or token should be detected automatically here.
-				if [ -n "$etokenID" ]; then # Need to add pFinder function if order  to do it once
-					echo -e "eToken $etokenID is \e[102monline\e[0m now - $timestamp" # Spinner here?
-					continue
-				elif ( pFinder --find ); then
-					pKiller && echo -e "eToken related processes have been killed and locked - $timestamp"
-				fi
-				sleep $LOOPTIMER
-			done
-		;;
-		-l | --lock) # Just lock the session.
-			while : ; do
-				local timestamp=$(date +%Y-%m-%d_%H-%M-%S)
-				local etokenID=$(lsusb -d 0529:0600)
-				# Testing single Alading eToken ID,
-				# any card or token should be detected automatically here.
-				if [ -n "$etokenID" ]; then # Need to add pFinder function if order  to do it once
-					echo -e "eToken $etokenID is \e[102monline\e[0m now - $timestamp" # Spinner here?
-					continue
-				elif ( ); then # One statement condition to do it once.
-					echo -e "eToken is out now. A system has been locked at \e[102m$timestamp\e[0m"
-				fi
-				sleep $LOOPTIMER
-			done
-		;;
-		-k | --knlock) # Kill everything and lock
-			while : ; do
-				local timestamp=$(date +%Y-%m-%d_%H-%M-%S)
-				local etokenID=$(lsusb -d 0529:0600)
-				# Testing single Alading eToken ID,
-				# any card or token should be detected automatically here.
-				if [ -n "$etokenID" ]; then # Need to add pFinder function if order  to do it once
-					echo -e "eToken $etokenID is \e[102monline\e[0m now - $timestamp" # Spinner here?
-					continue
-				elif ( pFinder --find ); then
-					pKiller && xflock4 && echo -e "eToken related processes have been killed and locked - $timestamp"
-				fi
-				sleep $LOOPTIMER
-			done
-		;;
-	esac
+eAgent2() {
+	
+	while : ; do
+		local timestamp=$(date +%Y-%m-%d_%H-%M-%S)
+		local etokenID=$(lsusb -d 0529:0600)
+		# Testing single Alading eToken ID,
+		# any card or token should be detected automatically here.
+		if [ -n "$etokenID" ]; then 
+			echo -e "eToken $etokenID is \e[102monline\e[0m now - $timestamp" # Spinner here?
+			continue
+		else
+			case "$1" in
+				-n | -- nolock)
+					if ( pFinder --find ); then
+						pKiller && echo -e "eToken related processes have been killed and locked - $timestamp"
+					fi
+				;;
+				-l | --lock)
+					if ( ); then # One statement condition to do it once.
+						echo -e "eToken is out now. A system has been locked at \e[102m$timestamp\e[0m"
+					fi
+				;;
+				-k | --knlock)
+					if ( pFinder --find ); then
+						pKiller && xflock4 && echo -e "eToken related processes have been killed and locked - $timestamp"
+					fi
+				;;
+				*)
+				echo "Invalid option"
+				return 126
+				;;
+			esac
+		fi
+		sleep $LOOPTIMER
+	done
+
 }
 
 case "$1" in
