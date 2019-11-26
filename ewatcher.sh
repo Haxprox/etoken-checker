@@ -81,9 +81,14 @@ lockFinder() {
 	return 0
 }
 
+eLoop() {
+	echo "Nothing yet" # Main loop world where everything happens.
+					   # Rewrtie functionality within 'eAgent' function.
+	return 0
+}
+
 eAgent() { # Loop agent. Always stay online and watching for eToken status.
 		   # Need to rewrite this loop and kill it once if there no related processes have been found.
-		   # 'pFinder' function must be overviewed and pasted here as loop check statement. 
 	case "$1" in
 		-n | --nolock)
 			while : ; do
@@ -94,7 +99,7 @@ eAgent() { # Loop agent. Always stay online and watching for eToken status.
 				if [ -n "$etokenID" ]; then # Need to add pFinder function if order  to do it once
 					echo -e "eToken $etokenID is \e[102monline\e[0m now - $timestamp" # Spinner here?
 					continue
-				else
+				elif ( pFinder --find ); then
 					pKiller && echo -e "eToken related processes have been killed and locked - $timestamp"
 				fi
 				sleep $LOOPTIMER
@@ -109,7 +114,7 @@ eAgent() { # Loop agent. Always stay online and watching for eToken status.
 				if [ -n "$etokenID" ]; then # Need to add pFinder function if order  to do it once
 					echo -e "eToken $etokenID is \e[102monline\e[0m now - $timestamp" # Spinner here?
 					continue
-				else
+				elif ( pFinder --find ); then
 					pKiller && xflock4 && echo -e "eToken related processes have been killed and locked - $timestamp"
 				fi
 				sleep $LOOPTIMER
