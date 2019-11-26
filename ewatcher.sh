@@ -10,6 +10,9 @@
 # Email			:	haxprox@gmail.com
 #############################################################################################################################################################################
 
+# . - Most probably need to load some configs when systemd daemon will be reviewed.
+# Check one more function that just locking and do nothing anymore.
+
 declare -ri LOOPTIMER=5
 declare -r LSOF=/usr/bin/lsof
 
