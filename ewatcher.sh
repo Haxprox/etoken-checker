@@ -60,7 +60,7 @@ pKiller() { # Process killer
 		else
 			echo -e "Permission denied. Need to be root to kill \e[41m$i\e[0m"
 		fi
-		#sleep 1
+		sleep 1 # Do it more gracefully (:
 	done
 	# Veracrypt provides unmount volume possibilities not being as root,
 	# just when the volumes mounted as read-only.
@@ -81,16 +81,12 @@ lockFinder() {
 	return 0
 }
 
-eLoop() {
-	echo "Nothing yet" # Main loop world where everything happens.
-					   # Rewrtie functionality within 'eAgent' function.
-	return 0
-}
-
 eAgent() { # Loop agent. Always stay online and watching for eToken status.
 		   # Need to rewrite this loop and kill it once if there no related processes have been found.
+		   # REWRITE THIS SHIT AS IT SO HUGE!!!!11
+		   # One 'while' loop and parsing parameters
 	case "$1" in
-		-n | --nolock)
+		-n | --nolock) # Kill everyhing besides the locking.
 			while : ; do
 				local timestamp=$(date +%Y-%m-%d_%H-%M-%S)
 				local etokenID=$(lsusb -d 0529:0600)
@@ -105,7 +101,22 @@ eAgent() { # Loop agent. Always stay online and watching for eToken status.
 				sleep $LOOPTIMER
 			done
 		;;
-		*)
+		-l | --lock) # Just lock the session.
+			while : ; do
+				local timestamp=$(date +%Y-%m-%d_%H-%M-%S)
+				local etokenID=$(lsusb -d 0529:0600)
+				# Testing single Alading eToken ID,
+				# any card or token should be detected automatically here.
+				if [ -n "$etokenID" ]; then # Need to add pFinder function if order  to do it once
+					echo -e "eToken $etokenID is \e[102monline\e[0m now - $timestamp" # Spinner here?
+					continue
+				elif ( ); then # One statement condition to do it once.
+					echo -e "eToken is out now. A system has been locked at \e[102m$timestamp\e[0m"
+				fi
+				sleep $LOOPTIMER
+			done
+		;;
+		-k | --knlock) # Kill everything and lock
 			while : ; do
 				local timestamp=$(date +%Y-%m-%d_%H-%M-%S)
 				local etokenID=$(lsusb -d 0529:0600)
@@ -131,12 +142,20 @@ case "$1" in
 		# Some pretests here
 		eAgent --nolock
 	;;
+	-l | --lock)
+		# Some pretests here
+		eAgent --lock
+	;;
+	-k | --knlock)
+		# Some pretests here
+		eAgent --knlock
+	;;
 	-s | --showp)
 		pFinder --check
 	;;
 	*)
 		# Some pretests here
-		eAgent
+		help
 	;;	
 esac
 
