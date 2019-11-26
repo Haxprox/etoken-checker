@@ -38,7 +38,7 @@ pFinder() {
 		;;
 		-f | --find)
 			if [ -x $LSOF ] && [ -e /usr/lib/libeToken.so ]; then
-				local PID=$($LSOF -t /usr/lib/libeToken.so)
+				local PID=$($LSOF -t /usr/lib/libeToken.so) # OpenSC should be added as well.
 				return $PID # So true as well. Just that who uses eToken provider.
 			else
 				echo "There is no lsof command or 'libeToken.so' file has been found"
