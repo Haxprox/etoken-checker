@@ -23,17 +23,17 @@ help() {
 	echo "-s  --showp	show processes use eToken"
 	echo "-n, --nolock	suppress DE locker and don't lock current session"
 	echo
-	return 0
+	exit 0
 }
 
 pFinder() {
 	case "$1" in
-		-c | --check)
+		-c | --showp)
 			if [ -x $LSOF ] && [ -e /usr/lib/libeToken.so ]; then
 				$LSOF /usr/lib/libeToken.so | cut -d' ' -f 1-5
 			else
 				echo "There is no lsof command or 'libeToken.so' file has been found"
-				return 126
+				exit 0
 			fi
 		;;
 		-f | --find)
@@ -42,12 +42,12 @@ pFinder() {
 				return $PID # So true as well. Just that who uses eToken provider.
 			else
 				echo "There is no lsof command or 'libeToken.so' file has been found"
-				return 126
+				exit 0
 			fi
 		;;
 		*)
 			echo "Invalid option"
-			return 126
+			exit 0
 		;;
 	esac
 }
@@ -60,7 +60,7 @@ pKiller() { # Process killer
 		else
 			echo -e "Permission denied. Need to be root to kill \e[41m$i\e[0m"
 		fi
-		sleep 1 # Do it more gracefully (:
+		# sleep 1
 	done
 	# Veracrypt provides unmount volume possibilities not being as root,
 	# just when the volumes mounted as read-only.
@@ -76,9 +76,13 @@ pKiller() { # Process killer
 	return 0
 }
 
-lockFinder() {
+eScreenLocker() {
+	# loginctl lock-session, xflock4, 
+	#
 	echo "Nothing yet" # Detect DE's locker command. Xfce4 light-locker only supported.
 	return 0
+	
+	# Need to overview Dbus objects and their calling.
 }
 
 eAgent() {	
@@ -94,12 +98,12 @@ eAgent() {
 			case "$1" in
 				-n | -- nolock)
 					if ( pFinder --find ); then
-						pKiller && echo -e "eToken related processes have been killed and locked - $timestamp"
+						pKiller && echo -e "eToken related processes have been killed - $timestamp"
 					fi
 				;;
 				-l | --lock)
-					if ( ); then # One statement condition to do it once.
-						xflock4 && echo -e "eToken is out now. A system has been locked at \e[102m$timestamp\e[0m"
+					if ( ); then # One statement condition in order to execute xflock4(locker) once.
+						eScreenLocker && echo -e "eToken is out now. System has been locked - \e[102m$timestamp\e[0m"
 					fi
 				;;
 				-k | --knlock)
@@ -109,7 +113,7 @@ eAgent() {
 				;;
 				*)
 				echo "Invalid option"
-				return 126
+				exit 0
 				;;
 			esac
 		fi
@@ -134,7 +138,7 @@ case "$1" in
 		eAgent --knlock
 	;;
 	-s | --showp)
-		pFinder --check
+		pFinder --showp
 	;;
 	*)
 		# Some pretests here
