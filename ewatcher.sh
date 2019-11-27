@@ -22,13 +22,15 @@ help() {
 	echo "-h, --help	show this dialog"
 	echo "-s  --showp	show processes use eToken"
 	echo "-n, --nolock	suppress DE locker and don't lock current session"
+	echo "-l, --lock	Just call DE locker and nothing more"
+	echo "-k, --knlock	Kill everyhing depends to the eToken and lock"
 	echo
 	exit 0
 }
 
 pFinder() {
 	case "$1" in
-		-c | --showp)
+		-s | --showp)
 			if [ -x $LSOF ] && [ -e /usr/lib/libeToken.so ]; then
 				$LSOF /usr/lib/libeToken.so | cut -d' ' -f 1-5
 			else
@@ -38,8 +40,7 @@ pFinder() {
 		;;
 		-f | --find)
 			if [ -x $LSOF ] && [ -e /usr/lib/libeToken.so ]; then
-				local PID=$($LSOF -t /usr/lib/libeToken.so) # OpenSC should be added as well.
-				return $PID # So true as well. Just that who uses eToken provider.
+				$LSOF -t /usr/lib/libeToken.so # OpenSC should be added as well.
 			else
 				echo "There is no lsof command or 'libeToken.so' file has been found"
 				exit 0
@@ -54,21 +55,22 @@ pFinder() {
 
 pKiller() { # Process killer
 	local i
-	for i in $(pFinder --find); do
-		if ( kill -9 $i ); then
+	for i in $(pFinder -f); do
+		if kill $i; then
 			echo -e "$i users' session has been killed"
 		else
 			echo -e "Permission denied. Need to be root to kill \e[41m$i\e[0m"
+			return 126
 		fi
-		# sleep 1
+		sleep 1
 	done
 	# Veracrypt provides unmount volume possibilities not being as root,
 	# just when the volumes mounted as read-only.
 	# You need to be in the appropriate group to unmount all volumes.
 	#
 	# Umounting happens every $LOOPTIMER period even the token isn't connected.
-	if ( veracrypt -d ); then
-		echo -e "Veracrypt users' containers have been unmounted"
+	if [ ! $(pidof veracrypt) ]; then
+		veracrypt -d && echo -e "Veracrypt users' containers have been unmounted"
 	else
 		echo -e "Permission denied. Need to be root to kill Veracrypt container"
 		return 126
@@ -93,32 +95,35 @@ eAgent() {
 		# any card or token should be detected automatically here.
 		if [ -n "$etokenID" ]; then 
 			echo -e "eToken $etokenID is \e[102monline\e[0m now - $timestamp" # Spinner here?
+			sleep 1
 			continue
 		else
 			case "$1" in
-				-n | -- nolock)
-					if ( pFinder --find ); then
+				-n | --nolock)
+					if [ $(pFinder -f) ]; then
 						pKiller && echo -e "eToken related processes have been killed - $timestamp"
 					fi
 				;;
 				-l | --lock)
-					if ( ); then # One statement condition in order to execute xflock4(locker) once.
+					if [ 1 ]; then # One statement condition in order to execute xflock4(locker) once.
 						eScreenLocker && echo -e "eToken is out now. System has been locked - \e[102m$timestamp\e[0m"
 					fi
 				;;
 				-k | --knlock)
-					if ( pFinder --find ); then
+					if [ ! $(pFinder -f) ]; then
 						pKiller && xflock4 && echo -e "eToken related processes have been killed and locked - $timestamp"
 					fi
 				;;
 				*)
-				echo "Invalid option"
-				exit 0
+					echo "Invalid option"
+					exit 0
 				;;
 			esac
 		fi
 		sleep $LOOPTIMER
 	done
+
+return 0
 }
 
 case "$1" in
@@ -141,7 +146,6 @@ case "$1" in
 		pFinder --showp
 	;;
 	*)
-		# Some pretests here
 		help
 	;;	
 esac
