@@ -79,11 +79,29 @@ pKiller() { # Process killer
 }
 
 eScreenLocker() {
+	
+	case $XDG_CURRENT_DESKTOP; in
+		XFCE)
+			
+		;;
+		KDE)
+			
+		;;
+		GNOME)
+			
+		;;
+		MATE)
+			
+		;;
+		CINNAMON)
+			
+		;;
+			
+	esac
 	# loginctl lock-session, xflock4, 
 	#
 	echo "Nothing yet" # Detect DE's locker command. Xfce4 light-locker only supported.
 	return 0
-	
 	# Need to overview Dbus objects and their calling.
 }
 
@@ -106,12 +124,12 @@ eAgent() {
 				;;
 				-l | --lock)
 					if [ 1 ]; then # One statement condition in order to execute xflock4(locker) once.
-						eScreenLocker && echo -e "eToken is out now. System has been locked - \e[102m$timestamp\e[0m"
+						eScreenLocker && echo -e "eToken is out now. The system has been locked - \e[102m$timestamp\e[0m"
 					fi
 				;;
 				-k | --knlock)
 					if [ ! $(pFinder -f) ]; then
-						pKiller && xflock4 && echo -e "eToken related processes have been killed and locked - $timestamp"
+						pKiller && eScreenLocker && echo -e "eToken related processes have been killed and locked - $timestamp"
 					fi
 				;;
 				*)
