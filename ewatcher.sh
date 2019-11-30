@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 #############################################################################################################################################################################
-# Script Name	:	ewatcher.sh
+# Script Name	:	ewatcher.sh (ewatcher.service unit)
 # Description	:	Background bash process is watching for eToken USB serial status and makes decision for killing all processes that were authorized by the eToken.
-# Terminating sequence: SSH, OpenVPN, VeraCrypt and locking(none locking) DE session.
+# Terminating	: 	SSH(1) : OpenVPN{1} -> VeraCrypt{2} -> locking(none locking){3} or logout{3} with saved DE session.
 
 # Args			:	Optional { '-h | --help', '-s | --showp', '-n | --nolock', '-l | --lock', '-k | --knlock', '-o | --logout' }
 # Author		:	Jaroslav Popel
@@ -35,29 +35,33 @@ pFinder() { # Show and find processes being used "libeToken.so" or "OpenSC".
 	case "$1" in
 		-s | --showp)
 			if [[ -x $LSOF ]] && [[ -e /usr/lib/libeToken.so ]]; then
-				$LSOF /usr/lib/libeToken.so | cut -d' ' -f 1-5
+				$LSOF /usr/lib/libeToken.so /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so | cut -d' ' -f 1-5
 			else
-				echo "There is no lsof command or \e[102mlibeToken.so\e[0m file has been found"
+				notify-send "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found"
+				notify-send "$(date +%H:%M)" "Plesae install opensc or eToken package libraries"
 				exit 0
 			fi
 		;;
 		-f | --find)
-			if [[ -x $LSOF ]] && [[ -e /usr/lib/libeToken.so ]]; then
-				$LSOF -t /usr/lib/libeToken.so # OpenSC should be added as well.
+			if [[ -x $LSOF ]] && [[ -e /usr/lib/libeToken.so && -e /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so ]]; then
+				$LSOF -t /usr/lib/libeToken.so /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so
 			else
-				echo "There is no lsof command or \e[102mlibeToken.so\e[0m file has been found"
+				notify-send "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found"
+				notify-send "$(date +%H:%M)" "Plesae install opensc or eToken package libraries"
 				exit 0
 			fi
 		;;
 		*)
-			echo "Invalid option"
+			echo "\e[102mInvalid option\e[0m"
 			exit 0
 		;;
 	esac
 }
 
-eSaveSession { # Execute save session command for each DE only once before 'eAgent' lopping. 
-	# Pre-test here at first in order to make sure all commands are available
+eSaveSession() { # Execute save session command for each DE only once before 'eAgent' lopping. 
+				 # Pre-test here at first in order to make sure all commands are available
+	echo -e "nothing yet here"
+	exit 0
 }
 
 pKiller() { # Process killer
@@ -65,74 +69,74 @@ pKiller() { # Process killer
 	local i
 	for i in $(pFinder -f); do
 		if kill $i; then
-			echo -e "\e[41m$i\e[0m users' session has been killed"
+			notify-send "$(date +%H:%M)" "$i user process session has been killed"
 		else
-			echo -e "Permission denied. Need to be root to kill \e[41m$i\e[0m"
+			notify-send "$(date +%H:%M)" "Permission denied. Need to be root to kill $i"
 			return 126
 		fi
 		sleep 1
 	done
 	
 	if [[ $(pidof veracrypt) ]]; then
-		veracrypt -d && echo -e "Veracrypt users' containers have been unmounted"
+		veracrypt -d && notify-send "$(date +%H:%M)" "Veracrypt user's containers have been unmounted"
 	fi
 	return 0
 }
 
-eScreenLocker() { # Locker and(or) logout
+eScreenLocker() { # Session locker and(or) logout
 	
-	local i=0
-	while [ i$ -ne 5 ] ; do	
-		echo -e "The locker hadler will start at \e[102m$i\e[0m"
-		if [ $i -eq 5 ]; then
+	local i=6
+	while [[ $i -ne 0 ]]; do	
+		if [ $i -eq 1 ]; then
 			case "$1" in
 				-o | --logout)
-					echo -e "Logout"; loginctl terminate-user $LOGNAME
+					sleep 1
+					notify-send "$(date +%H:%M)" "Logout"; loginctl terminate-user $LOGNAME
 				;;					
 				*)
-					echo -e "Locked"
+					notify-send "$(date +%H:%M)" "Locked"
+					sleep 1
 					for i in $(loginctl list-sessions | grep $(whoami) | awk '{print $1}'); do 
 						loginctl lock-session $i
 					done
 				;;
 			esac
-		i=$((i+1))
+		fi
 		sleep 1
+		i=$((i-1))
+		notify-send "The locker hadler will start at $i"
 	done
 	return 0
 }
 
-eAgent() {
+eAgent() { # Main function
 	
 	while : ; do
-		local timestamp=$(date +%Y-%m-%d_%H-%M-%S)
 		local etokenID=$(lsusb -d 0529:0600)
 		# Testing single Alading eToken ID,
 		# any card or token should be detected automatically here.
 		if [[ -n $etokenID ]]; then
-			clear; echo -e "eToken $etokenID is \e[102monline\e[0m now - $timestamp" # Spinner here?
 			sleep $LOOPTIMER
 			continue
 		else
 			case "$1" in
 				-n | --nolock)
 					if [[ $(pFinder -f) ]]; then
-						pKiller && echo -e "eToken related processes have been killed - \e[102m$timestamp\e[0m"
+						pKiller && notify-send "$(date +%H:%M)" "eToken related processes have been killed"
 					fi
 				;;
 				-l | --lock)
-				# One statement condition in order to execute locker once.
-				# Unable to control this SHIT!!111 but it make sense to have session $LOOPTIMER locked or
-				# locked all the time
-						clear; eScreenLocker && echo -e "eToken is out now. The system has been locked - \e[102m$timestamp\e[0m"
+						eScreenLocker
 				;;
 				-k | --knlock)
 					if [[ $(pFinder -f) ]]; then
-						pKiller; eScreenLocker && echo -e "eToken related processes have been killed and locked - \e[102m$timestamp\e[0m"
+						pKiller; eScreenLocker
 					fi
+				;;
 				-o | --logout)
-						# "eScreenLocker --logout" method for logout. Save session or without one?
-						pKiller; eScreenLocker --logout && echo -e "eToken related processes have been killed and logout - \e[102m$timestamp\e[0m"
+					if [[ $(pFinder -f) ]]; then
+						pKiller; eScreenLocker --logout
+					fi
 				;;
 				*)
 					echo "\e[102mInvalid option\e[0m"
@@ -160,9 +164,10 @@ case "$1" in
 	-k | --knlock)
 		# Some pretests here
 		eAgent --knlock
+	;;
 	-o | --logout)
 		# Some pretests here
-		eSaveSession
+		# eSaveSession
 		eAgent --logout
 	;;
 	-s | --showp)
