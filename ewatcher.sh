@@ -3,18 +3,15 @@
 #############################################################################################################################################################################
 # Script Name	:	ewatcher.sh (ewatcher.service unit)
 # Description	:	Background bash process is watching for eToken USB serial status and makes decision for killing all processes that were authorized by the eToken.
-# Terminating	: 	SSH(1) : OpenVPN{1} -> VeraCrypt{2} -> locking(none locking){3} or logout{3} with saved DE session.
-
+# Terminating	:	SSH(1) : OpenVPN{1} -> VeraCrypt{2} -> locking(none locking){3} or logout{3} with saved DE session.
 # Args			:	Optional { '-h | --help', '-s | --showp', '-n | --nolock', '-l | --lock', '-k | --knlock', '-o | --logout' }
 # Author		:	Jaroslav Popel
 # Email			:	haxprox@gmail.com
 #############################################################################################################################################################################
 
-# . - Most probably need to load some configs when systemd daemon will be reviewed. {1}
-# rpm and deb packages are needed {2}
-
 declare -ri LOOPTIMER=5
 declare -r LSOF=/usr/bin/lsof
+declare -r etokenID=0529:0600 # Find and specify your eToken or smart-card ID here with 'lsusb' command. 
 
 help() {
 	
@@ -34,20 +31,20 @@ pFinder() { # Show and find processes being used "libeToken.so" or "OpenSC".
 	
 	case "$1" in
 		-s | --showp)
-			if [[ -x $LSOF ]] && [[ -e /usr/lib/libeToken.so ]]; then
+			if [[ -x $LSOF ]] && [[ -e /usr/lib/libeToken.so || -e /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so ]]; then
 				$LSOF /usr/lib/libeToken.so /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so | cut -d' ' -f 1-5
 			else
 				notify-send "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found"
-				notify-send "$(date +%H:%M)" "Plesae install opensc or eToken package libraries"
+				notify-send "$(date +%H:%M)" "Please install openSC or eToken package libraries"
 				exit 0
 			fi
 		;;
 		-f | --find)
-			if [[ -x $LSOF ]] && [[ -e /usr/lib/libeToken.so && -e /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so ]]; then
+			if [[ -x $LSOF ]] && [[ -e /usr/lib/libeToken.so || -e /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so ]]; then
 				$LSOF -t /usr/lib/libeToken.so /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so
 			else
 				notify-send "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found"
-				notify-send "$(date +%H:%M)" "Plesae install opensc or eToken package libraries"
+				notify-send "$(date +%H:%M)" "Please install openSC or eToken package libraries"
 				exit 0
 			fi
 		;;
@@ -112,10 +109,7 @@ eScreenLocker() { # Session locker and(or) logout
 eAgent() { # Main function
 	
 	while : ; do
-		local etokenID=$(lsusb -d 0529:0600)
-		# Testing single Alading eToken ID,
-		# any card or token should be detected automatically here.
-		if [[ -n $etokenID ]]; then
+		if [[ $(lsusb -d $etokenID) ]]; then
 			sleep $LOOPTIMER
 			continue
 		else
