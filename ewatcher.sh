@@ -81,11 +81,25 @@ pKiller() { # Process killer
 
 eScreenLocker() { # Locker and(or) logout
 	
-	if [[ "$1" == "--logout" ]]; then
-		loginctl terminate-user $LOGNAME
-	else
-		for i in $(loginctl list-sessions | grep $(whoami) | awk '{print $1}'); do loginctl lock-session $i; done
-	fi
+	local i=0
+	while [ i$ -ne 5 ] ; do	
+		echo -e "The locker hadler will start at \e[102m$i\e[0m"
+		if [ $i -eq 5 ]; then
+			case "$1" in
+				-o | --logout)
+					echo -e "Logout"; loginctl terminate-user $LOGNAME
+				;;					
+				*)
+					echo -e "Locked"
+					for i in $(loginctl list-sessions | grep $(whoami) | awk '{print $1}'); do 
+						loginctl lock-session $i
+					done
+				;;
+			esac
+		i=$((i+1))
+		sleep 1
+	done
+	return 0
 }
 
 eAgent() {
