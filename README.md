@@ -1,58 +1,40 @@
 ## eToken-agent-watcher
-Background bash process is watching for eToken USB serial status and makes a decision for killing all processes that were authorized by the eToken or any smart-card device.
-The script covers the next functionality: Unmount VeraCrypt encrypted volumes, OpenVPN and SSH disconnecting sessions, screenlocker or logout caller.
+Background bash process is watching for eToken USB serial status and makes a decision for killing all processes that were authorized by the eToken or any smart card device.
+The script covers the next functionality: Unmount VeraCrypt encrypted volumes, OpenVPN and SSH disconnecting sessions, screen locker or logout callers.
 
 ## How does it work?
-When eToken or smart-card is online, the agent is looping within pre-installed looptimer and checking when it will be disconnected. Once it's disconnected, different handlers are being called. Find it by the '--help' command.
+When eToken or smart card is online, the agent is looping within pre-installed looptimer and checking when it will be disconnected. Once it's disconnected, different handlers are being called. Find it by the '--help' command.
 
 ## Usage
-### Installation from source:
+### Installation:
 ```
-Nothing yet ;(
+curl -O https://raw.githubusercontent.com/Haxprox/etoken-checker/master/ewatcher-install.sh
 ```
 Then run it :
 ```
-Nothing yet ;(
+sudo bash ewatcher-install.sh
 ```
-The 'ewatcher.service' unit and 'ewatcher.sh' script will be installed on approptiate folder.
-### Installation by native distro package manager:
-RPM
-```
-Nothing yet ;(
-```
-DEB
-```
-Nothing yet ;(
-```
-### Run
-- Check the parameters you're going to use and edit 'ewatcher.service' unit.
-```
-ewatcher.sh --help
-```
-```
-vi /etc/systemd/system/ewatcher.sh
-```
-- Reload systemd configuration, enable service by automatically on boot and start it.
-```
-systemctl daemon-reload && systemctl enable ewatcher.service && systemctl start ewatcher.service
-```
+You will be asked to specify your eToken or smart card ID and agent parameters, then 'ewatcher.service' systemd unit and 'ewatcher.sh' script will be installed to approptiate folder.
+
 ## Compatibility
 
-Supported OS and environments:
+Supported distros and environments:
 
-|                | KDE | Gnome 3 | Cinnamon | MATE | xfce4 |
-| -------------- | ---- | ----- | ----- | ----- | ----- |
-|  Arch Linux    |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|   Centos 8     |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|   CentOS 7     |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|   Debian 8     |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|   Debian 9     |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|   Debian 10    |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|   Fedora 27    |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|   Fedora 28    |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-| Ubuntu 16.04   |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-| Ubuntu 18.04   |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-| Ubuntu 19.04   |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|                | KDE | Gnome 3 | Cinnamon | MATE | Xfce4 | LXQT | LXDE |
+| -------------- | ---- | ----- | ----- | ----- | ----- | ----- | ----- |
+|  Arch Linux    |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   CentOS 8     |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   CentOS 7     |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Debian 8     |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Debian 9     |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Debian 10    |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Fedora 28    |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Fedora 29    |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Fedora 30    |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Fedora 31    |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+| Ubuntu 16.04   |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+| Ubuntu 18.04   |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+| Ubuntu 19.04   |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 
 - The script requires `systemd`.
 
