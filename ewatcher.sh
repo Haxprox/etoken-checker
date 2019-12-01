@@ -17,9 +17,9 @@ help() {
 	
 	echo "Usage: $0 [option...]"
 	echo
-	echo "-h, --help	show the dialog"
-	echo "-s  --showp	show processes eToken uses"
-	echo "-n, --nolock	suppress DE locker and don't lock current session"
+	echo "-h, --help	Show help dialog"
+	echo "-s  --showp	Show processes eToken uses"
+	echo "-n, --nolock	Suppress DE locker and kill related eToken processes"
 	echo "-l, --lock	Just call DE locker and nothing more"
 	echo "-k, --knlock	Kill everyhing related to the eToken and lock"
 	echo "-o, --logout	Kill everyhing related to the eToken and logout"
@@ -82,8 +82,9 @@ pKiller() { # Process killer
 
 eScreenLocker() { # Session locker and(or) logout
 	
-	local i=6
-	while [[ $i -ne 0 ]]; do	
+	local i=5
+	while [[ $i -ne 0 ]]; do
+		notify-send "The locker hadler will start at $i"
 		if [ $i -eq 1 ]; then
 			case "$1" in
 				-o | --logout)
@@ -101,7 +102,6 @@ eScreenLocker() { # Session locker and(or) logout
 		fi
 		sleep 1
 		i=$((i-1))
-		notify-send "The locker hadler will start at $i"
 	done
 	return 0
 }
