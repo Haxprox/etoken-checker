@@ -7,14 +7,17 @@ When eToken or smart card is online, the agent is looping within pre-installed l
 
 ## Usage
 ### Installation:
+- Download installation script
 ```
 curl -O https://raw.githubusercontent.com/Haxprox/etoken-checker/master/ewatcher-install.sh
 ```
-Then run it :
+- And run it
 ```
 sudo bash ewatcher-install.sh
 ```
-You will be asked to specify your eToken or smart card ID and agent parameters, then 'ewatcher.service' systemd unit and 'ewatcher.sh' script will be installed to approptiate folder.
+***You will be prompted to specify your current eToken or smart card ID, agent parameters and systemd unit status.***
+
+- Watcher now is deamonized and working.
 
 ## Compatibility
 
@@ -36,7 +39,7 @@ Supported distros and environments:
 | Ubuntu 18.04   |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 | Ubuntu 19.04   |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 
-- The script requires `systemd`.
+- The script is based on `systemd`.
 
 ✅
 ❌
