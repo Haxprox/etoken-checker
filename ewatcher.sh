@@ -21,8 +21,8 @@ help() {
 	echo "-s  --showp	Show processes eToken uses"
 	echo "-n, --nolock	Suppress DE locker and kill related eToken processes"
 	echo "-l, --lock	Just call DE locker and nothing more"
-	echo "-k, --knlock	Kill everyhing related to the eToken and lock"
-	echo "-o, --logout	Kill everyhing related to the eToken and logout"
+	echo "-k, --knlock	Kill everything related to the eToken and lock"
+	echo "-o, --logout	Kill everything related to the eToken and logout"
 	echo
 	exit 0
 }
