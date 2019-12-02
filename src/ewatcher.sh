@@ -11,7 +11,7 @@
 
 declare -ri LOOPTIMER=5
 declare -r LSOF=/usr/bin/lsof
-declare -r etokenID=0529:0600 # Find and specify your eToken or smart-card ID here with 'lsusb' command. 
+declare -r etokenID=0529:0600 # Find and specify your eToken or smart-card ID here using 'lsusb' command. 
 
 help() {
 	
