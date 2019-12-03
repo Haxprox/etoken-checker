@@ -8,7 +8,7 @@ help() {
 	echo "--knlock	Kill everything related to the eToken and lock."
 	echo "--logout	Kill everything related to the eToken and logout."
 	echo "==============================================================="
-	exit 0
+	return 0
 }
 
 eClone() {
@@ -32,27 +32,51 @@ eInstall() { # $1 -> ID variable should be here
 		echo -e "\e[91mPlease, select which of existed parameters you want to use:\e[0m"
 		help
 		select parameter in --nolock --lock --knlock --logout; do
-			case $parameter
+			case $parameter in
 				--nolock)
 					sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service
+					break
 				;;
 				--lock)
 					sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service
+					break
 				;;
 				--knlock)
 					sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service
+					break
 				;;				
 				--logout)
 					sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service
+					break
 				;;
 				*)
+					echo -e "Wrong, try one more time and do it сonsciously. I believe in you!"
 					continue
 				;;
 			esac
-		do
-		
-		# To be continued ...
-		
+		done
+		#=========================================================================================================
+		cp etoken-checker/src/ewatcher.sh /usr/bin/ && cp etoken-checker/src/ewatcher.service /etc/systemd/system/
+		#=========================================================================================================
+		echo -n "Would you like to start 'ewatcher.service' on boot? y/n: "
+		while read -r yn; do
+			case $yn in
+				yes | Yes | Y | y)
+					systemctl enable ewatcher.service
+					break
+				;;
+				no | No | N | n)
+					systemctl disable ewatcher.service
+					break
+				;;
+				*)
+					echo -e "Yes or No?"
+					continue
+				;;
+			esac
+			break
+		done
+			
 	else
 		echo -e "There is no 'etoken-checker' folder has been found."
 		exit 126
@@ -71,12 +95,7 @@ while : ; do
 		if [[ "$ID" != "$i" ]]; then
 			continue
 		else
-			eClone && eInstall $ID 
-			# 1. Specify $ID to etokenID
-			# 3. Copy files to the directories
-			# 2. Ask for the arguments
-			# ... Do all those stuff in order to proper editing and installation.
-			# Rewrite README as this task will do everything automacticaly!!!!!
+			eClone && eInstall $ID && echo -e "\e[32meToken-agent-watcher has been successfully installed!\e[0m"
 			exit 0
 		fi
 	done
