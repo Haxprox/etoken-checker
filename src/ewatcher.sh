@@ -24,7 +24,7 @@ help() {
 	echo "-k, --knlock	Kill everything related to the eToken and lock"
 	echo "-o, --logout	Kill everything related to the eToken and logout"
 	echo
-	exit 0
+	return 0
 }
 
 pFinder() { # Show and find processes being used "libeToken.so" or "OpenSC".

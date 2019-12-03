@@ -62,7 +62,7 @@ eInstall() { # $1 -> ID variable should be here
 		while read -r yn; do
 			case $yn in
 				yes | Yes | Y | y)
-					systemctl enable ewatcher.service
+					systemctl enable ewatcher.service; systemctl start ewatcher.service
 					break
 				;;
 				no | No | N | n)
