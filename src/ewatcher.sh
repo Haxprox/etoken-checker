@@ -20,7 +20,7 @@ help() {
 	echo "-h, --help	Show help dialog"
 	echo "-s  --showp	Show processes eToken uses"
 	echo "-n, --nolock	Suppress DE locker and kill related eToken processes"
-	echo "-l, --lock	Just call DE locker and nothing more"
+	echo "-l, --lock	Just call DE locker and nothing more. PAM pre-installed authentication expects here."
 	echo "-k, --knlock	Kill everything related to the eToken and lock"
 	echo "-o, --logout	Kill everything related to the eToken and logout"
 	echo
@@ -31,8 +31,8 @@ pFinder() { # Show and find processes being used "libeToken.so" or "OpenSC".
 	
 	case "$1" in
 		-s | --showp)
-			if [[ -x $LSOF ]] && [[ -e /usr/lib/libeToken.so || -e /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so ]]; then
-				$LSOF /usr/lib/libeToken.so /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so | cut -d' ' -f 1-5
+			if [[ -x $LSOF ]] && [[ -e /usr/lib/libeToken.so || -e /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so || -e /usr/lib64/opensc-pkcs11.so ]]; then
+				$LSOF /usr/lib/libeToken.so /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so /usr/lib64/opensc-pkcs11.so 2> /dev/null | cut -d' ' -f 1-5
 			else
 				notify-send "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found"
 				notify-send "$(date +%H:%M)" "Please install openSC or eToken package libraries"
@@ -40,8 +40,8 @@ pFinder() { # Show and find processes being used "libeToken.so" or "OpenSC".
 			fi
 		;;
 		-f | --find)
-			if [[ -x $LSOF ]] && [[ -e /usr/lib/libeToken.so || -e /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so ]]; then
-				$LSOF -t /usr/lib/libeToken.so /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so
+			if [[ -x $LSOF ]] && [[ -e /usr/lib/libeToken.so || -e /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so || -e /usr/lib64/opensc-pkcs11.so ]]; then
+				$LSOF /usr/lib/libeToken.so /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so /usr/lib64/opensc-pkcs11.so 2> /dev/null
 			else
 				notify-send "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found"
 				notify-send "$(date +%H:%M)" "Please install openSC or eToken package libraries"
@@ -83,26 +83,35 @@ pKiller() { # Process killer
 eScreenLocker() { # Session locker and(or) logout
 	
 	local i=5
-	while [[ $i -ne 0 ]]; do
-		notify-send "The locker hadler will start at $i"
-		if [ $i -eq 1 ]; then
-			case "$1" in
-				-o | --logout)
+	case "$1" in
+		-o | --logout)
+			while [[ $i -ne 0 ]]; do
+				notify-send "The locker hadler will start at $i"
+				if [ $i -eq 1 ]; then
 					sleep 1
-					notify-send "$(date +%H:%M)" "Logout"; loginctl terminate-user $LOGNAME
-				;;					
-				*)
+					notify-send "$(date +%H:%M)" "Logout"; loginctl terminate-user $LOGNAME # Need additional review $LOGNAME
+					break
+				fi
+				sleep 1
+				i=$((i-1))
+			done
+		;;					
+		*)
+			while [[ $i -ne 0 ]]; do
+				notify-send "The locker hadler will start at $i"
+				if [ $i -eq 1 ]; then
 					notify-send "$(date +%H:%M)" "Locked"
 					sleep 1
-					for i in $(loginctl list-sessions | grep $(whoami) | awk '{print $1}'); do 
-						loginctl lock-session $i
+					for i in $(loginctl list-sessions | grep seat | awk '{print $1}'); do 
+						loginctl lock-session $i # Need additional review
 					done
-				;;
-			esac
-		fi
-		sleep 1
-		i=$((i-1))
-	done
+					break
+				fi
+				sleep 1
+				i=$((i-1))
+			done
+		;;
+	esac
 	return 0
 }
 
