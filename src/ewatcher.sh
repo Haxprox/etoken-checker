@@ -20,7 +20,7 @@ help() {
 	echo "-h, --help	Show help dialog"
 	echo "-s  --showp	Show processes eToken uses"
 	echo "-n, --nolock	Suppress DE locker and kill related eToken processes"
-	echo "-l, --lock	Just call DE locker and nothing more. PAM pre-installed authentication expects here."
+	echo "-l, --lock	Just call DE locker and nothing more. PAM pre-installed authentication being expected here."
 	echo "-k, --knlock	Kill everything related to the eToken and lock"
 	echo "-o, --logout	Kill everything related to the eToken and logout"
 	echo
@@ -83,35 +83,31 @@ pKiller() { # Process killer
 eScreenLocker() { # Session locker and(or) logout
 	
 	local i=5
-	case "$1" in
-		-o | --logout)
-			while [[ $i -ne 0 ]]; do
-				notify-send "The locker hadler will start at $i"
-				if [ $i -eq 1 ]; then
+	# Need to define the current status of the system in order to call lock session once and get rid of the constant message flooding.
+	# Check loginctl man page.
+	# Wrap it below:
+
+	while [[ $i -ne 0 ]]; do
+		notify-send "The locker hadler will start at $i"
+		if [ $i -eq 1 ]; then
+			case "$1" in
+				-o | --logout)
 					sleep 1
-					notify-send "$(date +%H:%M)" "Logout"; loginctl terminate-user $LOGNAME # Need additional review $LOGNAME
-					break
-				fi
-				sleep 1
-				i=$((i-1))
-			done
-		;;					
-		*)
-			while [[ $i -ne 0 ]]; do
-				notify-send "The locker hadler will start at $i"
-				if [ $i -eq 1 ]; then
+					notify-send "$(date +%H:%M)" "Logout"; loginctl terminate-user $LOGNAME #!!!!! Need additional review $LOGNAME
+				;;					
+				*)
 					notify-send "$(date +%H:%M)" "Locked"
 					sleep 1
 					for i in $(loginctl list-sessions | grep seat | awk '{print $1}'); do 
 						loginctl lock-session $i # Need additional review
 					done
-					break
-				fi
-				sleep 1
-				i=$((i-1))
-			done
-		;;
-	esac
+				;;
+			esac
+			break
+		fi
+		sleep 1
+		i=$((i-1))
+	done
 	return 0
 }
 

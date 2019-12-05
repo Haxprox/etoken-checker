@@ -4,7 +4,7 @@ help() {
 	
 	echo "==============================================================="
 	echo "--nolock	Suppress DE locker and kill related eToken processes."
-	echo "--lock	Just call DE locker and nothing more. PAM pre-installed authentication expects here."
+	echo "--lock	Just call DE locker and nothing more. PAM pre-installed authentication being expected here."
 	echo "--knlock	Kill everything related to the eToken and lock."
 	echo "--logout	Kill everything related to the eToken and logout."
 	echo "==============================================================="
