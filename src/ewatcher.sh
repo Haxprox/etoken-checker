@@ -41,7 +41,7 @@ pFinder() { # Show and find processes being used "libeToken.so" or "OpenSC".
 		;;
 		-f | --find)
 			if [[ -x $LSOF ]] && [[ -e /usr/lib/libeToken.so || -e /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so || -e /usr/lib64/opensc-pkcs11.so ]]; then
-				$LSOF /usr/lib/libeToken.so /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so /usr/lib64/opensc-pkcs11.so 2> /dev/null
+				$LSOF -t /usr/lib/libeToken.so /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so /usr/lib64/opensc-pkcs11.so 2> /dev/null
 			else
 				notify-send "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found"
 				notify-send "$(date +%H:%M)" "Please install openSC or eToken package libraries"
@@ -57,8 +57,8 @@ pFinder() { # Show and find processes being used "libeToken.so" or "OpenSC".
 
 eSaveSession() { # Execute save session command for each DE only once before 'eAgent' lopping. 
 				 # Pre-test here at first in order to make sure all commands are available
-	echo -e "nothing yet here"
-	exit 0
+	echo -e "nothing yet here". # Soon
+	return 0
 }
 
 pKiller() { # Process killer
@@ -82,24 +82,21 @@ pKiller() { # Process killer
 
 eScreenLocker() { # Session locker and(or) logout
 	
-	local i=5
-	# Need to define the current status of the system in order to call lock session once and get rid of the constant message flooding.
-	# Check loginctl man page.
-	# Wrap it below:
-
+	local -i i=5
 	while [[ $i -ne 0 ]]; do
 		notify-send "The locker hadler will start at $i"
 		if [ $i -eq 1 ]; then
 			case "$1" in
 				-o | --logout)
+					notify-send "$(date +%H:%M)" "Logout";
 					sleep 1
-					notify-send "$(date +%H:%M)" "Logout"; loginctl terminate-user $LOGNAME #!!!!! Need additional review $LOGNAME
+					loginctl terminate-user $LOGNAME #!!!!! Need additional review $LOGNAME
 				;;					
 				*)
 					notify-send "$(date +%H:%M)" "Locked"
 					sleep 1
-					for i in $(loginctl list-sessions | grep seat | awk '{print $1}'); do 
-						loginctl lock-session $i # Need additional review
+					for j in $(loginctl list-sessions | grep seat | awk '{print $1}'); do 
+						loginctl lock-session $j
 					done
 				;;
 			esac
@@ -113,9 +110,14 @@ eScreenLocker() { # Session locker and(or) logout
 
 eAgent() { # Main function
 	
+	local -i LOCKER_STATE=0 # It's global, goddamn not good idea toggle. When the eToken is 'online' it's '0', another case is just '1'.
+							# This provides to get rid to check current lock status because unable to find how to detect it now.
 	while : ; do
 		if [[ $(lsusb -d $etokenID) ]]; then
 			sleep $LOOPTIMER
+			if [[ $LOCKER_STATE != 0 ]]; then
+				$LOCKER_STATE=0;
+			fi
 			continue
 		else
 			case "$1" in
@@ -125,15 +127,20 @@ eAgent() { # Main function
 					fi
 				;;
 				-l | --lock)
+						if [[ $LOCKER_STATE == 0 ]]; then # This $STATE gives to call eScreenLocker() only once.
+						LOCKER_STATE=1
 						eScreenLocker
+						fi
 				;;
 				-k | --knlock)
-					if [[ $(pFinder -f) ]]; then
+					if [[ $(pFinder -f) || $LOCKER_STATE == 0 ]]; then
+						LOCKER_STATE=1
 						pKiller; eScreenLocker
 					fi
 				;;
 				-o | --logout)
-					if [[ $(pFinder -f) ]]; then
+					if [[ $(pFinder -f) || $LOCKER_STATE == 0 ]]; then
+						LOCKER_STATE=1
 						pKiller; eScreenLocker --logout
 					fi
 				;;
