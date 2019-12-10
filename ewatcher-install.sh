@@ -4,7 +4,7 @@ help() {
 	
 	echo "==============================================================="
 	echo "--nolock	Suppress DE locker and kill related eToken processes."
-	echo "--lock	Just call DE locker and nothing more. PAM pre-installed authentication being expected here."
+	echo "--lock	Just call DE locker and nothing more. PAM pre-installed authentication is expected here."
 	echo "--knlock	Kill everything related to the eToken and lock."
 	echo "--logout	Kill everything related to the eToken and logout."
 	echo "==============================================================="
@@ -59,19 +59,19 @@ eInit() { # $1 -> ID variable should be here
 			elif [[ $2 == "--autostart" ]]; then
 			case $parameter in
 				--nolock)
-					sed -i "/Exec=~/.config/autostart/ewatcher.sh/c Exec=~/.config/autostart/ewatcher.sh $parameter" etoken-checker/src/ewatcher.auto
+					sed -i "/ewatcher.sh/c Exec=~/.config/autostart/ewatcher.sh $parameter" etoken-checker/src/ewatcher.desktop
 					break
 				;;
 				--lock)
-					sed -i "/Exec=~/.config/autostart/ewatcher.sh/c Exec=~/.config/autostart/ewatcher.sh $parameter" etoken-checker/src/ewatcher.auto
+					sed -i "/ewatcher.sh/c Exec=~/.config/autostart/ewatcher.sh $parameter" etoken-checker/src/ewatcher.desktop
 					break
 				;;
 				--knlock)
-					sed -i "/Exec=~/.config/autostart/ewatcher.sh/c Exec=~/.config/autostart/ewatcher.sh $parameter" etoken-checker/src/ewatcher.auto
+					sed -i "/ewatcher.sh/c Exec=~/.config/autostart/ewatcher.sh $parameter" etoken-checker/src/ewatcher.desktop
 					break
 				;;				
 				--logout)
-					sed -i "/Exec=~/.config/autostart/ewatcher.sh/c Exec=~/.config/autostart/ewatcher.sh $parameter" etoken-checker/src/ewatcher.auto
+					sed -i "/ewatcher.sh/c Exec=~/.config/autostart/ewatcher.sh $parameter" etoken-checker/src/ewatcher.desktop
 					break
 				;;
 				*)
@@ -89,13 +89,22 @@ eInit() { # $1 -> ID variable should be here
 }
 
 eAutostartInstall() {
-	# Install autostart service.
+	
+	if [[ ! -d ~/.config/autostart ]]; then
+		mkdir -p ~/.config/autostart && \
+		cp etoken-checker/src/ewatcher.desktop ~/.config/autostart && \
+		cp etoken-checker/src/ewatcher.sh ~/.config/autostart
+	else
+		echo -e "Unable to create '~/.config/autostart' folder and this functional doesn't work"
+		exit 0
+	fi
 	return 0
 }
 
 eUnitInstall() { 
 	#===================================================================================================================
-	sudo cp etoken-checker/src/ewatcher.sh /usr/bin/ && sudo cp etoken-checker/src/ewatcher.service /etc/systemd/system/
+	sudo cp etoken-checker/src/ewatcher.sh /usr/bin/ && \
+	sudo cp etoken-checker/src/ewatcher.service /etc/systemd/system/
 	#===================================================================================================================
 	echo -n "Would you like to start 'ewatcher.service' on boot? y/n: "
 	while read -r yn; do
@@ -130,7 +139,29 @@ while : ; do
 		if [[ "$ID" != "$i" ]]; then
 			continue
 		else
-			eClone && eInit $ID --autostart && echo -e "\e[32meToken-agent-watcher has been successfully installed!\e[0m"
+			echo -e "Please, specify which of the options service would you like to use?"
+			select selector in Autostart Systemd; do
+				case $selector in
+					Autostart)
+						eClone && \
+						eInit $ID --autostart && \
+						eAutostartInstall && \
+						echo -e "\e[32meToken-agent-watcher has been successfully installed!\e[0m"
+						break
+					;;
+					Systemd)
+						eClone && \
+						eInit $ID --systemd && \
+						eUnitInstall && \
+						echo -e "\e[32meToken-agent-watcher has been successfully installed!\e[0m"
+						break
+					;;
+					*)
+						echo -e "Wrong, try one more time and do it сonsciously. I believe in you!"
+						continue
+					;;				
+				esac
+			done
 			exit 0
 		fi
 	done
@@ -138,4 +169,3 @@ while : ; do
 	echo -e "Unable to find ID you specified or format is unavailable. Please, try again or insert a new device"
 	sleep 2
 done
-
