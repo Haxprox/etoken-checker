@@ -20,7 +20,7 @@ help() {
 	echo "-h, --help	Show help dialog"
 	echo "-s  --showp	Show processes eToken uses"
 	echo "-n, --nolock	Suppress DE locker and kill related eToken processes"
-	echo "-l, --lock	Just call DE locker and nothing more. PAM pre-installed authentication being expected here."
+	echo "-l, --lock	Just call DE locker and nothing more. PAM pre-installed authentication is expected here."
 	echo "-k, --knlock	Kill everything related to the eToken and lock"
 	echo "-o, --logout	Kill everything related to the eToken and logout"
 	echo
@@ -91,12 +91,14 @@ eScreenLocker() { # Session locker and(or) logout
 					notify-send "$(date +%H:%M)" "Logout";
 					sleep 1
 					loginctl terminate-user $LOGNAME #!!!!! Need additional review $LOGNAME
+													 # Need to overview 'loginctl' functionality with unprivileged permissions.
 				;;					
 				*)
 					notify-send "$(date +%H:%M)" "Locked"
 					sleep 1
 					for j in $(loginctl list-sessions | grep seat | awk '{print $1}'); do 
 						loginctl lock-session $j
+													  # Need to overview 'loginctl' functionality with unprivileged permissions.
 					done
 				;;
 			esac
@@ -116,7 +118,7 @@ eAgent() { # Main function
 		if [[ $(lsusb -d $etokenID) ]]; then
 			sleep $LOOPTIMER
 			if [[ $LOCKER_STATE != 0 ]]; then
-				$LOCKER_STATE=0;
+				LOCKER_STATE=0;
 			fi
 			continue
 		else

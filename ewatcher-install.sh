@@ -90,12 +90,12 @@ eInit() { # $1 -> ID variable should be here
 
 eAutostartInstall() {
 	
-	if [[ ! -d ~/.config/autostart ]]; then
-		mkdir -p ~/.config/autostart && \
+	if [[ -d ~/.config/autostart ]]; then
 		cp etoken-checker/src/ewatcher.desktop ~/.config/autostart && \
 		cp etoken-checker/src/ewatcher.sh ~/.config/autostart
+		# Run it after installing.
 	else
-		echo -e "Unable to create '~/.config/autostart' folder and this functional doesn't work"
+		echo -e "Unable to find '~/.config/autostart' folder and this functional doesn't work in your distro."
 		exit 0
 	fi
 	return 0
