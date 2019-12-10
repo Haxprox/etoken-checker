@@ -85,7 +85,7 @@ eScreenLocker() { # Session locker and(or) logout
 	local -i i=5
 	while [[ $i -ne 0 ]]; do
 		notify-send "The locker hadler will start at $i"
-		if [ $i -eq 1 ]; then
+		if [[ $i -eq 1 ]]; then
 			case "$1" in
 				-o | --logout)
 					notify-send "$(date +%H:%M)" "Logout";
@@ -127,7 +127,7 @@ eAgent() { # Main function
 					fi
 				;;
 				-l | --lock)
-						if [[ $LOCKER_STATE == 0 ]]; then # This $STATE gives to call eScreenLocker() only once.
+						if [[ $LOCKER_STATE == 0 ]]; then
 						LOCKER_STATE=1
 						eScreenLocker
 						fi

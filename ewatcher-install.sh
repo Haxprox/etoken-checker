@@ -23,15 +23,17 @@ eClone() {
 		echo -e "There is no git or curl and unzip command has been found. Plesae install the mentioned applications according to your distro."
 		exit 126
 	fi
+	return 0
 }
 
-eInstall() { # $1 -> ID variable should be here
- 
+eInit() { # $1 -> ID variable should be here
+		  # $2 -> aurostart or systemd
 	if [[ -d etoken-checker ]]; then
 		sed -i "/etokenID=/c etokenID=$1" etoken-checker/src/ewatcher.sh
 		echo -e "\e[91mPlease, select which of existed parameters you want to use:\e[0m"
 		help
 		select parameter in --nolock --lock --knlock --logout; do
+			if [[ $2 == "--systemd" ]]; then
 			case $parameter in
 				--nolock)
 					sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service
@@ -54,33 +56,66 @@ eInstall() { # $1 -> ID variable should be here
 					continue
 				;;
 			esac
-		done
-		#=========================================================================================================
-		cp etoken-checker/src/ewatcher.sh /usr/bin/ && cp etoken-checker/src/ewatcher.service /etc/systemd/system/
-		#=========================================================================================================
-		echo -n "Would you like to start 'ewatcher.service' on boot? y/n: "
-		while read -r yn; do
-			case $yn in
-				yes | Yes | Y | y)
-					systemctl enable ewatcher.service; systemctl start ewatcher.service
+			elif [[ $2 == "--autostart" ]]; then
+			case $parameter in
+				--nolock)
+					sed -i "/Exec=~/.config/autostart/ewatcher.sh/c Exec=~/.config/autostart/ewatcher.sh $parameter" etoken-checker/src/ewatcher.auto
 					break
 				;;
-				no | No | N | n)
-					systemctl disable ewatcher.service
+				--lock)
+					sed -i "/Exec=~/.config/autostart/ewatcher.sh/c Exec=~/.config/autostart/ewatcher.sh $parameter" etoken-checker/src/ewatcher.auto
+					break
+				;;
+				--knlock)
+					sed -i "/Exec=~/.config/autostart/ewatcher.sh/c Exec=~/.config/autostart/ewatcher.sh $parameter" etoken-checker/src/ewatcher.auto
+					break
+				;;				
+				--logout)
+					sed -i "/Exec=~/.config/autostart/ewatcher.sh/c Exec=~/.config/autostart/ewatcher.sh $parameter" etoken-checker/src/ewatcher.auto
 					break
 				;;
 				*)
-					echo -e "Yes or No?"
+					echo -e "Wrong, try one more time and do it сonsciously. I believe in you!"
 					continue
 				;;
-			esac
-			break
-		done
-			
+			esac				
+			fi
+		done			
 	else
 		echo -e "There is no 'etoken-checker' folder has been found."
 		exit 126
 	fi
+	return 0
+}
+
+eAutostartInstall() {
+	# Install autostart service.
+	return 0
+}
+
+eUnitInstall() { 
+	#===================================================================================================================
+	sudo cp etoken-checker/src/ewatcher.sh /usr/bin/ && sudo cp etoken-checker/src/ewatcher.service /etc/systemd/system/
+	#===================================================================================================================
+	echo -n "Would you like to start 'ewatcher.service' on boot? y/n: "
+	while read -r yn; do
+		case $yn in
+			yes | Yes | Y | y)
+				sudo systemctl enable ewatcher.service; sudo systemctl start ewatcher.service
+				break
+			;;
+			no | No | N | n)
+				sudo systemctl disable ewatcher.service
+				break
+			;;
+			*)
+				echo -e "Yes or No?"
+				continue
+			;;
+		esac
+		break
+	done
+	return 0
 }
 
 while : ; do
@@ -95,12 +130,12 @@ while : ; do
 		if [[ "$ID" != "$i" ]]; then
 			continue
 		else
-			eClone && eInstall $ID && echo -e "\e[32meToken-agent-watcher has been successfully installed!\e[0m"
+			eClone && eInit $ID --autostart && echo -e "\e[32meToken-agent-watcher has been successfully installed!\e[0m"
 			exit 0
 		fi
 	done
 	clear
-	echo -e "Unable to find ID you specified or format is unavailable. Please, try again."
+	echo -e "Unable to find ID you specified or format is unavailable. Please, try again or insert a new device"
 	sleep 2
 done
 

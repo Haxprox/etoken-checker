@@ -1,3 +1,4 @@
+
 ## eToken-agent-watcher
 Background bash process is watching for eToken USB serial status and makes a decision for killing all processes that were authorized by the eToken or any smart card device.
 The script covers the next functionality: Unmount VeraCrypt encrypted volumes, OpenVPN and SSH disconnecting sessions, screen locker or logout callers.
@@ -13,9 +14,11 @@ curl -O https://raw.githubusercontent.com/Haxprox/etoken-checker/master/ewatcher
 ```
 2. And run it
 ```
-sudo bash ewatcher-install.sh
+bash ewatcher-install.sh
 ```
-***You will be prompted to specify your current eToken or smart card ID, agent parameters and systemd unit status.***
+**You will be prompted to specify your current eToken or smart card ID, agent parameters and systemd/autostart daemon ways.**
+
+**NOTE**: SystemD way doesn't support notification. The peferable way is to choose 'autostart' folder according to your local home directory.
 
 3. Watcher now is deamonized and working.
 
