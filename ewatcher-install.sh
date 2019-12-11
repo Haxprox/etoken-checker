@@ -59,19 +59,19 @@ eInit() { # $1 -> ID variable should be here
 			elif [[ $2 == "--autostart" ]]; then
 			case $parameter in
 				--nolock)
-					sed -i "/ewatcher.sh/c Exec=~/.config/autostart/ewatcher.sh $parameter" etoken-checker/src/ewatcher.desktop
+					sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop
 					break
 				;;
 				--lock)
-					sed -i "/ewatcher.sh/c Exec=~/.config/autostart/ewatcher.sh $parameter" etoken-checker/src/ewatcher.desktop
+					sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop
 					break
 				;;
 				--knlock)
-					sed -i "/ewatcher.sh/c Exec=~/.config/autostart/ewatcher.sh $parameter" etoken-checker/src/ewatcher.desktop
+					sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop
 					break
 				;;				
 				--logout)
-					sed -i "/ewatcher.sh/c Exec=~/.config/autostart/ewatcher.sh $parameter" etoken-checker/src/ewatcher.desktop
+					sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop
 					break
 				;;
 				*)
@@ -94,6 +94,7 @@ eAutostartInstall() {
 		cp etoken-checker/src/ewatcher.desktop ~/.config/autostart && \
 		cp etoken-checker/src/ewatcher.sh ~/.config/autostart
 		# Run it after installing.
+		# The current user should have some root permissions with 'sudo'. 
 	else
 		echo -e "Unable to find '~/.config/autostart' folder and this functional doesn't work in your distro."
 		exit 0
@@ -101,10 +102,14 @@ eAutostartInstall() {
 	return 0
 }
 
-eUnitInstall() { 
+eUnitInstall() {
+	
+	echo -e "I need 'root' permissions in order to install the files to the appropriate folders."
+	sleep 1
 	#===================================================================================================================
 	sudo cp etoken-checker/src/ewatcher.sh /usr/bin/ && \
-	sudo cp etoken-checker/src/ewatcher.service /etc/systemd/system/
+	sudo cp etoken-checker/src/ewatcher.service /etc/systemd/system/ && \
+	echo -e "The 'ewatcher.sh' and 'ewatcher.service' files have been installed"
 	#===================================================================================================================
 	echo -n "Would you like to start 'ewatcher.service' on boot? y/n: "
 	while read -r yn; do
