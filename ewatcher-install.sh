@@ -28,27 +28,38 @@ eClone() {
 
 eInit() { # $1 -> ID variable should be here
 		  # $2 -> aurostart or systemd
+	local currentUser=$(whoami)
+	local ownGroup=$(groups | cut -d' ' -f1)
 	if [[ -d etoken-checker ]]; then
-		sed -i "/etokenID=/c etokenID=$1" etoken-checker/src/ewatcher.sh
-		echo -e "\e[91mPlease, select which of existed parameters you want to use:\e[0m"
+		sed -i "/etokenID=/c etokenID=$1" etoken-checker/src/ewatcher.sh && \
+		sed -i "s/changeme/$currentUser/" etoken-checker/src/ewatcher
+		echo -e "\e[91mPlease, select which of the existed parameters you want to use:\e[0m"
 		help
 		select parameter in --nolock --lock --knlock --logout; do
 			if [[ $2 == "--systemd" ]]; then
 			case $parameter in
 				--nolock)
-					sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service
+					sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service && \
+					sed -i "/User=/c User=$currentUser" etoken-checker/src/ewatcher.service && \
+					sed -i "/Group=/c User=$ownGroup" etoken-checker/src/ewatcher.service && \
 					break
 				;;
-				--lock)
-					sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service
+				--lock)					
+					sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service && \
+					sed -i "/User=/c User=$currentUser" etoken-checker/src/ewatcher.service && \
+					sed -i "/Group=/c User=$ownGroup" etoken-checker/src/ewatcher.service && \
 					break
 				;;
 				--knlock)
-					sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service
+					sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service && \
+					sed -i "/User=/c User=$currentUser" etoken-checker/src/ewatcher.service && \
+					sed -i "/Group=/c User=$ownGroup" etoken-checker/src/ewatcher.service && \
 					break
 				;;				
 				--logout)
-					sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service
+					sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service && \
+					sed -i "/User=/c User=$currentUser" etoken-checker/src/ewatcher.service && \
+					sed -i "/Group=/c User=$ownGroup" etoken-checker/src/ewatcher.service && \
 					break
 				;;
 				*)
@@ -91,8 +102,11 @@ eInit() { # $1 -> ID variable should be here
 eAutostartInstall() {
 	
 	if [[ -d ~/.config/autostart ]]; then
-		cp etoken-checker/src/ewatcher.desktop ~/.config/autostart && \
-		cp etoken-checker/src/ewatcher.sh ~/.config/autostart
+		cp etoken-checker/src/ewatcher.desktop ~/.config/autostart/ && \
+		cp etoken-checker/src/ewatcher.sh ~/.config/autostart/ && \
+		echo -e "I need root permissions in order install 'ewatcher' sudoer file into '/etc/sudoers.d/' directory" && \
+		sleep 1 && \
+		sudo cp etoken-checker/src/ewatcher /etc/etc/sudoers.d/ &&
 		# Run this section after installing.
 		# The current user should have some root permission without using password using sudo command.
 		# Install some privileges here with 'sudoers' file -> 'loginctl *, 'kill *', 'veracrypt *'
@@ -152,7 +166,7 @@ while : ; do
 						eClone && \
 						eInit $ID --autostart && \
 						eAutostartInstall && \
-						echo -e "\e[32meToken-agent-watcher has been successfully installed!\e[0m"
+						echo -e "\e[32meToken-agent-watcher has been successfully installed. You need to logout and login again!\e[0m"
 						break
 					;;
 					Systemd)
