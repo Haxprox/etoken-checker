@@ -4,7 +4,7 @@ Description=eToken process watcher
 [Service]
 Type=simple
 ExecStart=ewatcher.sh --nolock
-User=dk
+User=root
 Group=root
 # Parameter is changeable. Execute 'ewatcher.sh' with '--help' parameter in order to familiarize them.
 

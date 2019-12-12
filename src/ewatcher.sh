@@ -65,7 +65,7 @@ pKiller() { # Process killer
 	
 	local i
 	for i in $(pFinder -f); do
-		if kill $i; then
+		if sudo kill $i; then
 			notify-send "$(date +%H:%M)" "$i user process session has been killed"
 		else
 			notify-send "$(date +%H:%M)" "Permission denied. Need to be root to kill $i"
@@ -74,8 +74,8 @@ pKiller() { # Process killer
 		sleep 1
 	done
 	
-	if [[ $(pidof veracrypt) ]]; then
-		veracrypt -d && notify-send "$(date +%H:%M)" "Veracrypt user's containers have been unmounted"
+	if [[ -e /usr/bin/veracrypt && $(pidof veracrypt) ]]; then
+		sudo veracrypt -d && notify-send "$(date +%H:%M)" "Veracrypt user's containers have been unmounted"
 	fi
 	return 0
 }
@@ -90,14 +90,14 @@ eScreenLocker() { # Session locker and(or) logout
 				-o | --logout)
 					notify-send "$(date +%H:%M)" "Logout";
 					sleep 1
-					loginctl terminate-user $LOGNAME #!!!!! Need additional review $LOGNAME
+					sudo loginctl terminate-user $LOGNAME #!!!!! Need additional review $LOGNAME
 													 # Need to overview 'loginctl' functionality with unprivileged permissions.
 				;;					
 				*)
 					notify-send "$(date +%H:%M)" "Locked"
 					sleep 1
 					for j in $(loginctl list-sessions | grep seat | awk '{print $1}'); do 
-						loginctl lock-session $j
+						sudo loginctl lock-session $j
 													  # Need to overview 'loginctl' functionality with unprivileged permissions.
 					done
 				;;

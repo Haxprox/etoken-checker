@@ -93,8 +93,9 @@ eAutostartInstall() {
 	if [[ -d ~/.config/autostart ]]; then
 		cp etoken-checker/src/ewatcher.desktop ~/.config/autostart && \
 		cp etoken-checker/src/ewatcher.sh ~/.config/autostart
-		# Run it after installing.
-		# The current user should have some root permissions with 'sudo'. 
+		# Run this section after installing.
+		# The current user should have some root permission without using password using sudo command.
+		# Install some privileges here with 'sudoers' file -> 'loginctl *, 'kill *', 'veracrypt *'
 	else
 		echo -e "Unable to find '~/.config/autostart' folder and this functional doesn't work in your distro."
 		exit 0

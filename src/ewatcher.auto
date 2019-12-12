@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=ewatcher
-GenericName=ewatcher.auto
-Comment=eToken process watcher
-Exec=~/.config/autostart/ewatcher.sh --lock
-Terminal=false
-Type=Application
-X-GNOME-Autostart-enabled=true
