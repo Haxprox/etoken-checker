@@ -2,12 +2,12 @@
 
 help() {
 	
-	echo "==============================================================="
+	echo "========================================================================================"
 	echo "--nolock	Suppress DE locker and kill related eToken processes."
 	echo "--lock	Just call DE locker and nothing more. PAM pre-installed authentication is expected here."
 	echo "--knlock	Kill everything related to the eToken and lock."
 	echo "--logout	Kill everything related to the eToken and logout."
-	echo "==============================================================="
+	echo "========================================================================================"
 	return 0
 }
 
@@ -107,7 +107,7 @@ eAutostartInstall() {
 		echo -e "I need root permissions in order install 'ewatcher' sudoer file into '/etc/sudoers.d/' directory" && \
 		sleep 1 && \
 		chmod a-w etoken-checker/src/ewatcher && \
-		sudo cp etoken-checker/src/ewatcher /etc/etc/sudoers.d/
+		sudo cp etoken-checker/src/ewatcher /etc/sudoers.d/
 	else
 		echo -e "Unable to find '~/.config/autostart' folder and current functionality doesn't work in your distro."
 		exit 0
