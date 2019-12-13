@@ -106,12 +106,10 @@ eAutostartInstall() {
 		cp etoken-checker/src/ewatcher.sh ~/.config/autostart/ && \
 		echo -e "I need root permissions in order install 'ewatcher' sudoer file into '/etc/sudoers.d/' directory" && \
 		sleep 1 && \
-		sudo cp etoken-checker/src/ewatcher /etc/etc/sudoers.d/ &&
-		# Run this section after installing.
-		# The current user should have some root permission without using password using sudo command.
-		# Install some privileges here with 'sudoers' file -> 'loginctl *, 'kill *', 'veracrypt *'
+		chmod a-w etoken-checker/src/ewatcher && \
+		sudo cp etoken-checker/src/ewatcher /etc/etc/sudoers.d/
 	else
-		echo -e "Unable to find '~/.config/autostart' folder and this functional doesn't work in your distro."
+		echo -e "Unable to find '~/.config/autostart' folder and current functionality doesn't work in your distro."
 		exit 0
 	fi
 	return 0
