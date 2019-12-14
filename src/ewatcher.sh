@@ -175,8 +175,8 @@ case "$1" in
 		fi
 	;;
 	-o | --logout)
-		# eSaveSession
 		if pFinder --check; then
+			# eSaveSession
 			eAgent --logout
 		fi
 	;;
