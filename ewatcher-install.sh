@@ -162,7 +162,7 @@ eUnitInstall() {
 INSTALLATION_STATE=0
 
 if pFinder; then
-	$INSTALLATION_STATE=1
+	INSTALLATION_STATE=1
 else
 	echo -e "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found. Would you like to continue the installation process?"
 	echo -e "The scirpt wont work and to be launched as well. You need to install openSC or eToken package libraries at first."
@@ -170,10 +170,10 @@ else
 	while read -r yn; do
 		case $yn in
 			yes | Yes | Y | y)
-				$INSTALLATION_STATE=1
+				INSTALLATION_STATE=1
 			;;
 			no | No | N | n)
-				$INSTALLATION_STATE=0
+				INSTALLATION_STATE=0
 				echo -e "Aborted!"
 			;;
 			*)
