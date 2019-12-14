@@ -173,8 +173,8 @@ else
 				$INSTALLATION_STATE=1
 			;;
 			no | No | N | n)
-				$INSTALLATION_STATE=1
-				echo -e "Aborted"
+				$INSTALLATION_STATE=0
+				echo -e "Aborted!"
 			;;
 			*)
 				echo -e "Yes or No?"
