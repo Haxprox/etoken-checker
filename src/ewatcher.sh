@@ -4,7 +4,7 @@
 # Script Name	:	ewatcher.sh (ewatcher.service unit)
 # Description	:	Background bash process is watching for eToken USB serial status and makes decision for killing all processes that were authorized by the eToken.
 # Terminating	:	SSH(1) : OpenVPN{1} -> VeraCrypt{2} -> locking(none locking){3} or logout{3} with saved DE session.
-# Args			:	Optional { '-h | --help', '-s | --showp', '-n | --nolock', '-l | --lock', '-k | --knlock', '-o | --logout' }
+# Args			:	Optional { '-h | --help', '-s | --showp', '-n | --nolock', '-l | --lock', '-k | --knlock', '-o | --logout', -c | --check }
 # Author		:	Jaroslav Popel
 # Email			:	haxprox@gmail.com
 #############################################################################################################################################################################
@@ -17,12 +17,13 @@ help() {
 	
 	echo "Usage: $0 [option...]"
 	echo
-	echo "-h, --help	Show help dialog"
-	echo "-s  --showp	Show processes eToken uses"
-	echo "-n, --nolock	Suppress DE locker and kill related eToken processes"
+	echo "-h, --help	Show help dialog."
+	echo "-s  --showp	Show processes eToken uses."
+	echo "-n, --nolock	Suppress DE locker and kill related eToken processes."
 	echo "-l, --lock	Just call DE locker and nothing more. PAM pre-installed authentication is expected here."
-	echo "-k, --knlock	Kill everything related to the eToken and lock"
-	echo "-o, --logout	Kill everything related to the eToken and logout"
+	echo "-k, --knlock	Kill everything related to the eToken and lock."
+	echo "-o, --logout	Kill everything related to the eToken and logout."
+	echo "-c, --check	Check whether the libraries are pre-installed."
 	echo
 	return 0
 }
@@ -31,20 +32,18 @@ pFinder() { # Show and find processes being used "libeToken.so" or "OpenSC".
 	
 	case "$1" in
 		-s | --showp)
-			if [[ -x $LSOF ]] && [[ -e /usr/lib/libeToken.so || -e /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so || -e /usr/lib64/opensc-pkcs11.so ]]; then
 				$LSOF /usr/lib/libeToken.so /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so /usr/lib64/opensc-pkcs11.so 2> /dev/null | cut -d' ' -f 1-5
-			else
-				notify-send "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found"
-				notify-send "$(date +%H:%M)" "Please install openSC or eToken package libraries"
-				return 255
-			fi
 		;;
 		-f | --find)
-			if [[ -x $LSOF ]] && [[ -e /usr/lib/libeToken.so || -e /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so || -e /usr/lib64/opensc-pkcs11.so ]]; then
 				$LSOF -t /usr/lib/libeToken.so /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so /usr/lib64/opensc-pkcs11.so 2> /dev/null
+		;;
+		-c | --check)
+			if [[ -e /usr/lib/libeToken.so || -e /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so || -e /usr/lib64/opensc-pkcs11.so ]]; then
+				return 0
 			else
 				notify-send "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found"
 				notify-send "$(date +%H:%M)" "Please install openSC or eToken package libraries"
+				notify-send "$(date +%H:%M)" "The scirpt wont work and to be launched as well"
 				return 255
 			fi
 		;;
@@ -122,25 +121,25 @@ eAgent() { # Main function
 		else
 			case "$1" in
 				-n | --nolock)
-					if [[ $LOCKER_STATE == 0 ]] || pFinder -f; then
+					if [[ $LOCKER_STATE == 0 ]]; then
 						LOCKER_STATE=1
 						pKiller && notify-send "$(date +%H:%M)" "eToken related processes have been killed"
 					fi
 				;;
 				-l | --lock)
-						if [[ $LOCKER_STATE == 0 ]]; then
+					if [[ $LOCKER_STATE == 0 ]]; then
 						LOCKER_STATE=1
 						eScreenLocker
-						fi
+					fi
 				;;
 				-k | --knlock)
-					if [[ $LOCKER_STATE == 0 ]] || pFinder -f; then
+					if [[ $LOCKER_STATE == 0 ]]; then
 						LOCKER_STATE=1
 						pKiller; eScreenLocker
 					fi
 				;;
 				-o | --logout)
-					if [[ $LOCKER_STATE == 0 ]] || pFinder -f; then
+					if [[ $LOCKER_STATE == 0 ]]; then
 						LOCKER_STATE=1
 						pKiller; eScreenLocker --logout
 					fi
@@ -161,24 +160,31 @@ case "$1" in
 		help
 	;;
 	-n | --nolock)
-		# Some pretests here
-		eAgent --nolock
+		if pFinder --check; then # Check whether the libraries are pre-installed.
+			eAgent --nolock
+		fi
 	;;
 	-l | --lock)
-		# Some pretests here
-		eAgent --lock
+		if pFinder --check; then
+			eAgent --lock
+		fi
 	;;
 	-k | --knlock)
-		# Some pretests here
-		eAgent --knlock
+		if pFinder --check; then
+			eAgent --knlock
+		fi
 	;;
 	-o | --logout)
-		# Some pretests here
 		# eSaveSession
-		eAgent --logout
+		if pFinder --check; then
+			eAgent --logout
+		fi
 	;;
 	-s | --showp)
 		pFinder --showp
+	;;
+	-c | --check)
+		pFinder --check
 	;;
 	*)
 		help

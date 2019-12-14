@@ -11,6 +11,18 @@ help() {
 	return 0
 }
 
+pFinder() {
+	
+	if [[ -e /usr/lib/libeToken.so || -e /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so || -e /usr/lib64/opensc-pkcs11.so ]]; then
+		return 0
+	else
+		notify-send "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found"
+		notify-send "$(date +%H:%M)" "Please install openSC or eToken package libraries"
+		notify-send "$(date +%H:%M)" "The scirpt wont work and to be launched as well"
+		return 255
+	fi
+}
+
 eClone() {
 
 	if [[ -x /usr/bin/git || -x /bin/git || -x $(which git) ]]; then
@@ -124,6 +136,7 @@ eUnitInstall() {
 	sudo cp etoken-checker/src/ewatcher.sh /usr/bin/ && \
 	sudo cp etoken-checker/src/ewatcher.service /etc/systemd/system/ && \
 	echo -e "The 'ewatcher.sh' and 'ewatcher.service' files have been installed"
+	sleep 1
 	#===================================================================================================================
 	echo -n "Would you like to start 'ewatcher.service' on boot? y/n: "
 	while read -r yn; do
@@ -146,7 +159,33 @@ eUnitInstall() {
 	return 0
 }
 
-while : ; do
+INSTALLATION_STATE=0
+
+if pFinder; then
+	$INSTALLATION_STATE=1
+else
+	echo -e "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found. Would you like to continue the installation process?"
+	echo -e "The scirpt wont work and to be launched as well. You need to install openSC or eToken package libraries at first."
+	echo -n "Would you like to install 'etocken-watcher' anyway? y/n: "
+	while read -r yn; do
+		case $yn in
+			yes | Yes | Y | y)
+				$INSTALLATION_STATE=1
+			;;
+			no | No | N | n)
+				$INSTALLATION_STATE=1
+				echo -e "Aborted"
+			;;
+			*)
+				echo -e "Yes or No?"
+				continue
+			;;
+		esac
+	done
+fi
+
+while [ $INSTALLATION_STATE -eq 1 ]; do
+
 	clear
 	echo "=============================================================================="
 	lsusb
@@ -158,7 +197,7 @@ while : ; do
 		if [[ "$ID" != "$i" ]]; then
 			continue
 		else
-			echo -e "Please, specify which of the options service would you like to use?"
+			echo -e "Please, specify which of the options service you would like to use:"
 			select selector in Autostart Systemd; do
 				case $selector in
 					Autostart)
@@ -166,7 +205,6 @@ while : ; do
 						eInit $ID --autostart && \
 						eAutostartInstall && \
 						echo -e "\e[32meToken-agent-watcher has been successfully installed. You need to logout and login again!\e[0m"
-						break
 					;;
 					Systemd)
 						eClone && \
