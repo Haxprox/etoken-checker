@@ -171,10 +171,12 @@ else
 		case $yn in
 			yes | Yes | Y | y)
 				INSTALLATION_STATE=1
+				break
 			;;
 			no | No | N | n)
 				INSTALLATION_STATE=0
 				echo -e "Aborted!"
+				break
 			;;
 			*)
 				echo -e "Yes or No?"
@@ -205,6 +207,7 @@ while [ $INSTALLATION_STATE -eq 1 ]; do
 						eInit $ID --autostart && \
 						eAutostartInstall && \
 						echo -e "\e[32meToken-agent-watcher has been successfully installed. You need to logout and login again!\e[0m"
+						break
 					;;
 					Systemd)
 						eClone && \
