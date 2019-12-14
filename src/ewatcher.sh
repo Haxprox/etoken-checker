@@ -36,7 +36,7 @@ pFinder() { # Show and find processes being used "libeToken.so" or "OpenSC".
 			else
 				notify-send "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found"
 				notify-send "$(date +%H:%M)" "Please install openSC or eToken package libraries"
-				exit 0
+				return 255
 			fi
 		;;
 		-f | --find)
@@ -45,12 +45,12 @@ pFinder() { # Show and find processes being used "libeToken.so" or "OpenSC".
 			else
 				notify-send "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found"
 				notify-send "$(date +%H:%M)" "Please install openSC or eToken package libraries"
-				exit 0
+				return 255
 			fi
 		;;
 		*)
 			echo "\e[102mInvalid option\e[0m"
-			exit 0
+			return 255
 		;;
 	esac
 }
@@ -69,7 +69,7 @@ pKiller() { # Process killer
 			notify-send "$(date +%H:%M)" "$i user process session has been killed"
 		else
 			notify-send "$(date +%H:%M)" "Permission denied. Need to be root to kill $i"
-			return 126
+			return 255
 		fi
 		sleep 1
 	done
@@ -91,14 +91,12 @@ eScreenLocker() { # Session locker and(or) logout
 					notify-send "$(date +%H:%M)" "Logout";
 					sleep 1
 					sudo loginctl terminate-user $LOGNAME #!!!!! Need additional review $LOGNAME
-													 # Need to overview 'loginctl' functionality with unprivileged permissions.
 				;;					
 				*)
 					notify-send "$(date +%H:%M)" "Locked"
 					sleep 1
 					for j in $(loginctl list-sessions | grep seat | awk '{print $1}'); do 
 						sudo loginctl lock-session $j
-													  # Need to overview 'loginctl' functionality with unprivileged permissions.
 					done
 				;;
 			esac
@@ -124,7 +122,8 @@ eAgent() { # Main function
 		else
 			case "$1" in
 				-n | --nolock)
-					if [[ $(pFinder -f) ]]; then
+					if [[ $LOCKER_STATE == 0 ]] || pFinder -f; then
+						LOCKER_STATE=1
 						pKiller && notify-send "$(date +%H:%M)" "eToken related processes have been killed"
 					fi
 				;;
@@ -135,20 +134,20 @@ eAgent() { # Main function
 						fi
 				;;
 				-k | --knlock)
-					if [[ $(pFinder -f) || $LOCKER_STATE == 0 ]]; then
+					if [[ $LOCKER_STATE == 0 ]] || pFinder -f; then
 						LOCKER_STATE=1
 						pKiller; eScreenLocker
 					fi
 				;;
 				-o | --logout)
-					if [[ $(pFinder -f) || $LOCKER_STATE == 0 ]]; then
+					if [[ $LOCKER_STATE == 0 ]] || pFinder -f; then
 						LOCKER_STATE=1
 						pKiller; eScreenLocker --logout
 					fi
 				;;
 				*)
 					echo "\e[102mInvalid option\e[0m"
-					exit 0
+					exit 1
 				;;
 			esac
 		fi

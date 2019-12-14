@@ -32,7 +32,7 @@ eInit() { # $1 -> ID variable should be here
 	local ownGroup=$(groups | cut -d' ' -f1)
 	if [[ -d etoken-checker ]]; then
 		sed -i "/etokenID=/c etokenID=$1" etoken-checker/src/ewatcher.sh && \
-		sed -i "s/changeme/$currentUser/" etoken-checker/src/ewatcher
+		sed -i "s/changeme/$currentUser/" etoken-checker/src/ewatcher && \
 		echo -e "\e[91mPlease, select which of the existed parameters you want to use:\e[0m"
 		help
 		select parameter in --nolock --lock --knlock --logout; do
@@ -106,10 +106,11 @@ eAutostartInstall() {
 		cp etoken-checker/src/ewatcher.sh ~/.config/autostart/ && \
 		echo -e "I need root permissions in order install 'ewatcher' sudoer file into '/etc/sudoers.d/' directory" && \
 		sleep 1 && \
-		chmod a-w etoken-checker/src/ewatcher && \
+		chmod 440 etoken-checker/src/ewatcher && \
 		sudo cp etoken-checker/src/ewatcher /etc/sudoers.d/
 	else
-		echo -e "Unable to find '~/.config/autostart' folder and current functionality doesn't work in your distro."
+		echo -e "Unable to find '~/.config/autostart' folder. Please, perform some tweaks or create it yourself and start installation again." && \
+		rm -rf etoken-checker
 		exit 0
 	fi
 	return 0
