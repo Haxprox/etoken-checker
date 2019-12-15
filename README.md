@@ -1,6 +1,6 @@
 
 ## eToken-agent-watcher
-Background bash process is watching for eToken USB serial status and makes a decision for killing all processes that were authorized by the eToken or any smart card device.
+Background bash process is watching for eToken USB serial or smart card status and makes a decision for killing all processes that were authorized by the eToken or any smart card device.
 The script covers the next functionality: Unmount VeraCrypt encrypted volumes, OpenVPN and SSH disconnecting sessions, screen locker or logout callers.
 
 ## How does it work?
@@ -47,7 +47,6 @@ Supported distros and environments:
 
 - The script is based on `systemd` and built-in desktop `autostart` feature.
 
---|
-✅|
-❌|
---|
+✅ - Means `OpenSC` package is pre-installed and `~/.config/autostart/` is supported by default.
+❌ - Means `OpenSC` package is not pre-installed or `~/.config/autostart/` folder is not supported by default. Additional actions are needed to proceed.
+❔ - Means not tested so far.

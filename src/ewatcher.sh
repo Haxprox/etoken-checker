@@ -89,7 +89,7 @@ eScreenLocker() { # Session locker or logout caller
 				-o | --logout)
 					notify-send "$(date +%H:%M)" "Logout";
 					sleep 1
-					sudo loginctl terminate-user $LOGNAME #!!!!! Need additional review $LOGNAME
+					sudo loginctl terminate-user $(whoami)
 				;;					
 				*)
 					notify-send "$(date +%H:%M)" "Locked"
