@@ -48,5 +48,7 @@ Supported distros and environments:
 - The script is based on `systemd` and built-in desktop `autostart` feature.
 
 ✅ - Means `OpenSC` package is pre-installed and `~/.config/autostart/` is supported by default.
+
 ❌ - Means `OpenSC` package is not pre-installed or `~/.config/autostart/` folder is not supported by default. Additional actions are needed to proceed.
+
 ❔ - Means not tested so far.
