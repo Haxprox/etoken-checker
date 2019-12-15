@@ -123,7 +123,7 @@ eAutostartInstall() {
 	else
 		echo -e "Unable to find '~/.config/autostart' folder. Please, perform some tweaks or create it yourself and start installation again." && \
 		rm -rf etoken-checker
-		exit 0
+		exit 255
 	fi
 	return 0
 }
@@ -146,7 +146,23 @@ eUnitInstall() {
 				break
 			;;
 			no | No | N | n)
-				sudo systemctl disable ewatcher.service
+				sudo systemctl disable ewatcher.service && \
+				echo -n "But would you like to start it now? y/n: "
+				while read -r ny; do
+					case $ny in
+					yes | Yes | Y | y)
+						sudo systemctl start ewatcher.service
+						break
+					;;
+					no | No | N | n)
+						break
+					;;
+					*)
+						echo -e "Yes or No?"
+						continue
+					;;
+					esac
+				done
 				break
 			;;
 			*)

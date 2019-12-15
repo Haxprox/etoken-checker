@@ -18,7 +18,7 @@ bash ewatcher-install.sh
 ```
 **You will be prompted to specify your current eToken or smart card ID, agent parameters and systemd/autostart daemon ways.**
 
-**NOTE**: `Systemd` way doesn't support notification. The preferable way is to choose `autostart` option.
+**NOTE**: `Systemd` way doesn't support notifications. The preferable way is to choose `autostart` option.
 
 3. Watcher now is deamonized and working.
 
