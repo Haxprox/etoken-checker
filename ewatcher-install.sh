@@ -176,7 +176,7 @@ else
 			no | No | N | n)
 				INSTALLATION_STATE=0
 				echo -e "Aborted!"
-				break
+				exit 255
 			;;
 			*)
 				echo -e "Yes or No?"

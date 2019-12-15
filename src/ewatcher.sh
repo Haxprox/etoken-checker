@@ -3,7 +3,7 @@
 #############################################################################################################################################################################
 # Script Name	:	ewatcher.sh (ewatcher.service unit)
 # Description	:	Background bash process is watching for eToken USB serial status and makes decision for killing all processes that were authorized by the eToken.
-# Terminating	:	SSH(1) : OpenVPN{1} -> VeraCrypt{2} -> locking(none locking){3} or logout{3} with saved DE session.
+# Terminating	:	SSH(1) : OpenVPN{1} -> VeraCrypt{2} -> locking(none locking){3} or logout{3} with saving DE session.
 # Args			:	Optional { '-h | --help', '-s | --showp', '-n | --nolock', '-l | --lock', '-k | --knlock', '-o | --logout', -c | --check }
 # Author		:	Jaroslav Popel
 # Email			:	haxprox@gmail.com
