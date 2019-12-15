@@ -79,7 +79,7 @@ pKiller() { # Process killer
 	return 0
 }
 
-eScreenLocker() { # Session locker and(or) logout
+eScreenLocker() { # Session locker or logout caller
 	
 	local -i i=5
 	while [[ $i -ne 0 ]]; do
@@ -109,8 +109,7 @@ eScreenLocker() { # Session locker and(or) logout
 
 eAgent() { # Main function
 	
-	local -i LOCKER_STATE=0 # It's global, goddamn not good idea toggle. When the eToken is 'online' it's '0', another case is just '1'.
-							# This provides to get rid to check current lock status because unable to find how to detect it now.
+	local -i LOCKER_STATE=0
 	while : ; do
 		if [[ $(lsusb -d $etokenID) ]]; then
 			sleep $LOOPTIMER
@@ -146,7 +145,7 @@ eAgent() { # Main function
 				;;
 				*)
 					echo "\e[102mInvalid option\e[0m"
-					exit 1
+					exit 255
 				;;
 			esac
 		fi
@@ -162,22 +161,42 @@ case "$1" in
 	-n | --nolock)
 		if pFinder --check; then # Check whether the libraries are pre-installed.
 			eAgent --nolock
+		else
+			echo -e "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found" && \
+			echo -e "$(date +%H:%M)" "Please install openSC or eToken package libraries" && \
+			echo -e "$(date +%H:%M)" "The scirpt wont work and to be launched as well"
+			exit 255
 		fi
 	;;
 	-l | --lock)
 		if pFinder --check; then
 			eAgent --lock
+		else
+			echo -e "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found" && \
+			echo -e "$(date +%H:%M)" "Please install openSC or eToken package libraries" && \
+			echo -e "$(date +%H:%M)" "The scirpt wont work and to be launched as well"
+			exit 255
 		fi
 	;;
 	-k | --knlock)
 		if pFinder --check; then
 			eAgent --knlock
+		else
+			echo -e "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found" && \
+			echo -e "$(date +%H:%M)" "Please install openSC or eToken package libraries" && \
+			echo -e "$(date +%H:%M)" "The scirpt wont work and to be launched as well"
+			exit 255
 		fi
 	;;
 	-o | --logout)
 		if pFinder --check; then
 			# eSaveSession
 			eAgent --logout
+		else
+			echo -e "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found" && \
+			echo -e "$(date +%H:%M)" "Please install openSC or eToken package libraries" && \
+			echo -e "$(date +%H:%M)" "The scirpt wont work and to be launched as well"
+			exit 255
 		fi
 	;;
 	-s | --showp)

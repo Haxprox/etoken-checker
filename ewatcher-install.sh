@@ -193,6 +193,7 @@ while [ $INSTALLATION_STATE -eq 1 ]; do
 	lsusb
 	echo "=============================================================================="
 	echo -e "Please, specify your current eToken ID from existed ID list. Format \e[91m0000:XXXX\e[0m"
+	echo -e "\e[32mNOTE:\e[0m Insert your USB eToken or SmartCard device and type anything to refresh USB device list."
 	echo -n "ID="
 	read ID
 	for i in $(lsusb | awk '{print $6}'); do
