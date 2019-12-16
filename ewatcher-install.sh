@@ -223,6 +223,7 @@ while [ $INSTALLATION_STATE -eq 1 ]; do
 						eClone && \
 						eInit $ID --autostart && \
 						eAutostartInstall && \
+						rm -rf etoken-checker && \
 						echo -e "\e[32meToken-agent-watcher has been successfully installed. You need to logout and login again!\e[0m"
 						break
 					;;
@@ -230,6 +231,7 @@ while [ $INSTALLATION_STATE -eq 1 ]; do
 						eClone && \
 						eInit $ID --systemd && \
 						eUnitInstall && \
+						rm -rf etoken-checker && \
 						echo -e "\e[32meToken-agent-watcher has been successfully installed!\e[0m"
 						break
 					;;
