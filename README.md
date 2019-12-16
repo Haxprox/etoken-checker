@@ -18,7 +18,8 @@ bash ewatcher-install.sh
 ```
 **You will be prompted to specify your current eToken or smart card ID, agent parameters and systemd/autostart daemon ways.**
 
-**NOTE**: `Systemd` way doesn't support notifications. The preferable way is to choose `autostart` option.
+**NOTE**: The script is based on `Systemd` and built-in desktop `autostart` feature. 
+`Systemd` way doesn't support desktop notifications. The preferable way is to choose `autostart` option.
 
 3. Watcher now is deamonized and working.
 
@@ -44,8 +45,6 @@ Supported distros and environments:
 | Ubuntu 16.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 | Ubuntu 18.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 | Ubuntu 19.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-
-- The script is based on `systemd` and built-in desktop `autostart` feature.
 
 ✅ - Means `OpenSC` package is pre-installed and `~/.config/autostart/` is supported by default.
 
