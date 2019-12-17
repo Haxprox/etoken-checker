@@ -11,19 +11,41 @@ help() {
 	return 0
 }
 
-eOSDetect() {
-	# Detect what of the distro is being used for now. Returns codes will indicate about it.
-	return 0 # nothing here yet and soon.
+ePckMgmtDetect() { # Returns the package manager is used on the current distro. 
+	
+	declare -A osInfo;
+	osInfo[/etc/redhat-release]=yum
+	osInfo[/etc/arch-release]=pacman
+	osInfo[/etc/gentoo-release]=emerge
+	osInfo[/etc/SuSE-release]=zypper
+	osInfo[/etc/debian_version]=apt-get
+	osInfo[/etc/fedora-release]=dnf
+
+	for f in ${!osInfo[@]}; do
+		if [[ -f $f ]]; then
+			echo "${osInfo[$f]}"
+		fi
+	done
+	return 0
 }
 
-ePackInstall() {
-	# OpenSC installation and probabaly the latest eToken, ruToken, etc. drivers.
-	return 0 # nothing here yet and soon.
+ePackInstall() { # OpenSC, lsof installation and probabaly the latest eToken, ruToken, etc drivers.		
+	
+	local pckmgr=$(ePckMgmtDetect)
+	if [ "$pckmgr" == "pacman" ]; then
+		sudo $pckmgr -Sy lsof opensc
+	elif [ "$pckmgr" == "emerge" ]; then
+		echo"Does not support yet, unfortunately. Install the packages manually and launch the installation one more time."
+		return 255
+	else
+		sudo $pckmgr install lsof opensc -y
+	fi
 }
 
 pFinder() {
 	
 	if [[ -e /usr/lib/libeToken.so || -e /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so || -e /usr/lib64/opensc-pkcs11.so ]]; then
+	# Need to improve the findings with installed packages and corresponding distro's package manager.
 		return 0
 	else
 		notify-send "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found"
@@ -185,23 +207,72 @@ eUnitInstall() {
 	return 0
 }
 
-INSTALLATION_STATE=0
+eSetup() {
+	
+	while : ; do
+		clear
+		echo "=============================================================================="
+		lsusb
+		echo "=============================================================================="
+		echo -e "Please, specify your current eToken ID from existed ID list. Format \e[91m0000:XXXX\e[0m"
+		echo -e "\e[32mNOTE:\e[0m Insert your USB eToken or SmartCard device and type anything to refresh USB device list."
+		echo -n "ID="
+		read ID
+		for i in $(lsusb | awk '{print $6}'); do
+			if [[ "$ID" != "$i" ]]; then
+				continue
+			else
+				echo -e "Please, specify which of the options service you would like to use:"
+				select selector in Autostart Systemd; do
+					case $selector in
+						Autostart)
+							eClone && \
+							eInit $ID --autostart && \
+							eAutostartInstall && \
+							rm -rf etoken-checker && \
+							echo -e "\e[32meToken-agent-watcher has been successfully installed. You need to logout and login again!\e[0m"
+							break
+						;;
+						Systemd)
+							eClone && \
+							eInit $ID --systemd && \
+							eUnitInstall && \
+							rm -rf etoken-checker && \
+							echo -e "\e[32meToken-agent-watcher has been successfully installed!\e[0m"
+							break
+						;;
+						*)
+							echo -e "Wrong, try one more time and do it сonsciously. I believe in you!"
+							continue
+						;;				
+					esac
+				done
+				break
+			fi
+		done
+		clear
+		echo -e "Unable to find ID you specified or format is unavailable. Please, try again or insert a new device"
+		sleep 2
+	done
+	return 0
+}
 
 if pFinder; then
-	INSTALLATION_STATE=1
+	eSetup
 else
-	echo -e "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found. Would you like to continue the installation process?"
-	echo -e "The scirpt wont work and to be launched as well. You need to install openSC or eToken package libraries at first."
-	echo -n "Would you like to install 'etocken-watcher' anyway? y/n: "
+	echo -e "There is no 'lsof' command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found"
+	echo -e "The scirpt wont work and to be launched as well. You need to install openSC or eToken package libraries at first"
+	echo -n "Would you like to continue 'etocken-watcher' and related packages installation on this process? y/n: "
 	while read -r yn; do
 		case $yn in
 			yes | Yes | Y | y)
-				INSTALLATION_STATE=1
+				# OpenSC and eToken package according to the previous detections functions.
+				ePackInstall && \
+				eSetup
 				break
 			;;
 			no | No | N | n)
-				INSTALLATION_STATE=0
-				echo -e "Aborted!"
+				echo -e "Aborted. Install related packages at first manually. Start installation script afterward again."
 				exit 255
 			;;
 			*)
@@ -211,50 +282,3 @@ else
 		esac
 	done
 fi
-
-while [ $INSTALLATION_STATE -eq 1 ]; do
-
-	clear
-	echo "=============================================================================="
-	lsusb
-	echo "=============================================================================="
-	echo -e "Please, specify your current eToken ID from existed ID list. Format \e[91m0000:XXXX\e[0m"
-	echo -e "\e[32mNOTE:\e[0m Insert your USB eToken or SmartCard device and type anything to refresh USB device list."
-	echo -n "ID="
-	read ID
-	for i in $(lsusb | awk '{print $6}'); do
-		if [[ "$ID" != "$i" ]]; then
-			continue
-		else
-			echo -e "Please, specify which of the options service you would like to use:"
-			select selector in Autostart Systemd; do
-				case $selector in
-					Autostart)
-						eClone && \
-						eInit $ID --autostart && \
-						eAutostartInstall && \
-						rm -rf etoken-checker && \
-						echo -e "\e[32meToken-agent-watcher has been successfully installed. You need to logout and login again!\e[0m"
-						break
-					;;
-					Systemd)
-						eClone && \
-						eInit $ID --systemd && \
-						eUnitInstall && \
-						rm -rf etoken-checker && \
-						echo -e "\e[32meToken-agent-watcher has been successfully installed!\e[0m"
-						break
-					;;
-					*)
-						echo -e "Wrong, try one more time and do it сonsciously. I believe in you!"
-						continue
-					;;				
-				esac
-			done
-			exit 0
-		fi
-	done
-	clear
-	echo -e "Unable to find ID you specified or format is unavailable. Please, try again or insert a new device"
-	sleep 2
-done
