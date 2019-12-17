@@ -123,7 +123,7 @@ eAgent() { # Main function
 				-n | --nolock)
 					if [[ $LOCKER_STATE == 0 ]]; then
 						LOCKER_STATE=1
-						pKiller && notify-send "$(date +%H:%M)" "eToken related processes have been killed"
+						pKiller
 					fi
 				;;
 				-l | --lock)
