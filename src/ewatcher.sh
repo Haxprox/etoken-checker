@@ -116,7 +116,8 @@ eAgent() { # Main function
 			if [[ $LOCKER_STATE != 0 ]]; then
 				LOCKER_STATE=0;
 			fi
-			continue
+			continue # Is it a great security idea to have automatic actions when the device is online? Hmmmm ...
+					 # Will see ...
 		else
 			case "$1" in
 				-n | --nolock)
