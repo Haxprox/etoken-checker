@@ -11,6 +11,16 @@ help() {
 	return 0
 }
 
+eOSDetect() {
+	# Detect what of the distro is being used for now. Returns codes will indicate about it.
+	return 0 # nothing here yet and soon.
+}
+
+ePackInstall() {
+	# OpenSC installation and probabaly the latest eToken, ruToken, etc. drivers.
+	return 0 # nothing here yet and soon.
+}
+
 pFinder() {
 	
 	if [[ -e /usr/lib/libeToken.so || -e /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so || -e /usr/lib64/opensc-pkcs11.so ]]; then
