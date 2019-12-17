@@ -14,7 +14,7 @@ help() {
 ePckMgmtDetect() { # Returns the package manager is used on the current distro. 
 	
 	declare -A osInfo;
-	osInfo[/etc/redhat-release]=yum
+	osInfo[/etc/centos-release]=yum
 	osInfo[/etc/arch-release]=pacman
 	osInfo[/etc/gentoo-release]=emerge
 	osInfo[/etc/SuSE-release]=zypper
@@ -35,7 +35,7 @@ ePackInstall() { # OpenSC, lsof installation and probabaly the latest eToken, ru
 	if [ "$pckmgr" == "pacman" ]; then
 		sudo $pckmgr -Sy lsof opensc
 	elif [ "$pckmgr" == "emerge" ]; then
-		echo"Does not support yet, unfortunately. Install the packages manually and launch the installation one more time."
+		echo -e "Does not support yet, unfortunately. Install the packages manually and launch the installation one more time."
 		return 255
 	else
 		sudo $pckmgr install lsof opensc -y
@@ -148,13 +148,14 @@ eAutostartInstall() {
 	if [[ -d ~/.config/autostart ]]; then
 		cp etoken-checker/src/ewatcher.desktop ~/.config/autostart/ && \
 		cp etoken-checker/src/ewatcher.sh ~/.config/autostart/ && \
+		sudo -k && \
 		echo -e "I need root permissions in order install 'ewatcher' sudoer file into '/etc/sudoers.d/' directory" && \
 		sleep 1 && \
 		chmod 440 etoken-checker/src/ewatcher && \
 		sudo cp etoken-checker/src/ewatcher /etc/sudoers.d/
 	else
 		echo -e "Unable to find '~/.config/autostart' folder. Please, perform some tweaks or create it yourself and start installation again." && \
-		rm -rf etoken-checker
+		rm -rf etoken-checker ewatcher-install.sh
 		exit 255
 	fi
 	return 0
@@ -165,6 +166,7 @@ eUnitInstall() {
 	echo -e "I need 'root' permissions in order to install the files to the appropriate folders."
 	sleep 1
 	#===================================================================================================================
+	sudo -k && \
 	sudo cp etoken-checker/src/ewatcher.sh /usr/bin/ && \
 	sudo cp etoken-checker/src/ewatcher.service /etc/systemd/system/ && \
 	echo -e "The 'ewatcher.sh' and 'ewatcher.service' files have been installed"
@@ -214,8 +216,8 @@ eSetup() {
 		echo "=============================================================================="
 		lsusb
 		echo "=============================================================================="
-		echo -e "Please, specify your current eToken ID from existed ID list. Format \e[91m0000:XXXX\e[0m"
 		echo -e "\e[32mNOTE:\e[0m Insert your USB eToken or SmartCard device and type anything to refresh USB device list."
+		echo -e "Please, specify your current eToken ID from existed ID list. Format \e[91m0000:XXXX\e[0m"
 		echo -n "ID="
 		read ID
 		for i in $(lsusb | awk '{print $6}'); do
@@ -247,7 +249,7 @@ eSetup() {
 						;;				
 					esac
 				done
-				break
+				exit 0
 			fi
 		done
 		clear
