@@ -46,8 +46,8 @@ Supported distros and environments:
 | Ubuntu 18.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 | Ubuntu 19.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 
-✅ - Means `OpenSC` package is pre-installed and `~/.config/autostart/` is supported by default.
+✅ - Means `opensc, lsof`, packages can be installed and `~/.config/autostart/` folder is supported by default.
 
-❌ - Means `OpenSC` package is not pre-installed or `~/.config/autostart/` folder is not supported by default. Additional actions are needed to proceed.
+❌ - Means `opensc, lsof` packages can't be installed or `~/.config/autostart/` folder is not supported by default. Additional actions are needed to continue.
 
 ❔ - Means not tested so far.
