@@ -238,9 +238,8 @@ eSetup() {
 							eInit $ID --autostart && \
 							eAutostartInstall && \
 							rm -rf etoken-checker && \
-							bash ~/.config/autostart/ewatcher.sh $EWATCHER_PARAMETER && \
+							bash ~/.config/autostart/ewatcher.sh $EWATCHER_PARAMETER &
 							echo -e "\e[32meToken-agent-watcher has been successfully installed and started.\e[0m"
-							
 							break
 						;;
 						Systemd)
