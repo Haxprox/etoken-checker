@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+EWATCHER_PARAMETER="--nolock"
+
 help() {
 	
 	echo "========================================================================================"
@@ -115,18 +117,22 @@ eInit() { # $1 -> ID variable should be here
 			case $parameter in
 				--nolock)
 					sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop
+					EWATCHER_PARAMETER=$parameter
 					break
 				;;
 				--lock)
 					sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop
+					EWATCHER_PARAMETER=$parameter
 					break
 				;;
 				--knlock)
 					sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop
+					EWATCHER_PARAMETER=$parameter
 					break
 				;;				
 				--logout)
 					sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop
+					EWATCHER_PARAMETER=$parameter
 					break
 				;;
 				*)
@@ -155,7 +161,7 @@ eAutostartInstall() {
 		sudo cp etoken-checker/src/ewatcher /etc/sudoers.d/
 	else
 		echo -e "Unable to find '~/.config/autostart' folder. Please, perform some tweaks or create it yourself and start installation again." && \
-		rm -rf etoken-checker ewatcher-install.sh
+		rm -rf etoken-checker
 		exit 255
 	fi
 	return 0
@@ -232,7 +238,9 @@ eSetup() {
 							eInit $ID --autostart && \
 							eAutostartInstall && \
 							rm -rf etoken-checker && \
-							echo -e "\e[32meToken-agent-watcher has been successfully installed. You need to logout and login again!\e[0m"
+							bash ~/.config/autostart/ewatcher.sh $EWATCHER_PARAMETER && \
+							echo -e "\e[32meToken-agent-watcher has been successfully installed and started.\e[0m"
+							
 							break
 						;;
 						Systemd)
@@ -268,7 +276,6 @@ else
 	while read -r yn; do
 		case $yn in
 			yes | Yes | Y | y)
-				# OpenSC and eToken package according to the previous detections functions.
 				ePackInstall && \
 				eSetup
 				break
