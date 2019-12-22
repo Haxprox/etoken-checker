@@ -1,7 +1,7 @@
 
 ## eToken-agent-watcher
 Background bash process is watching for eToken USB serial or smart card status and makes a decision for killing all processes that were authorized by the eToken or any smart card device.
-The script covers the next functionality: Unmount VeraCrypt encrypted volumes, OpenVPN and SSH disconnecting sessions, screen locker or logout callers.
+The script covers the next functionality: Unmount VeraCrypt encrypted volumes, OpenVPN and SSH disconnecting sessions, Keepass{xc} DB closer, screen locker or logout callers.
 
 ## How does it work?
 When eToken or smart card is online, the agent is looping within pre-installed looptimer and checking when it will be disconnected. Once it's disconnected, different handlers are being called. Find it by the '--help' command.

@@ -73,6 +73,10 @@ pKiller() { # Process killer
 		sleep 1
 	done
 	
+	if [[ -e /usr/bin/keepassxc && $(pidof keepassxc) ]]; then
+		sudo kill $(pidof keepassxc) && notify-send "$(date +%H:%M)" "Keepassxc password manager has been killed"
+	fi
+		
 	if [[ -e /usr/bin/veracrypt && $(pidof veracrypt) ]]; then
 		sudo veracrypt -d && notify-send "$(date +%H:%M)" "Veracrypt user's containers have been unmounted"
 	fi
