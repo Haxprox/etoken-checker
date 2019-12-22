@@ -63,6 +63,10 @@ eSaveSession() { # Execute save session command for each DE only once before 'eA
 pKiller() { # Process killer
 	
 	local i
+	if [[ -e /usr/bin/veracrypt && $(pidof veracrypt) ]]; then
+		sudo veracrypt -d && notify-send "$(date +%H:%M)" "Veracrypt user's containers have been unmounted"
+	fi
+	
 	for i in $(pFinder -f); do
 		if sudo kill $i; then
 			notify-send "$(date +%H:%M)" "$i user process session has been killed"
@@ -76,10 +80,7 @@ pKiller() { # Process killer
 	if [[ -e /usr/bin/keepassxc && $(pidof keepassxc) ]]; then
 		sudo kill $(pidof keepassxc) && notify-send "$(date +%H:%M)" "Keepassxc password manager has been killed"
 	fi
-		
-	if [[ -e /usr/bin/veracrypt && $(pidof veracrypt) ]]; then
-		sudo veracrypt -d && notify-send "$(date +%H:%M)" "Veracrypt user's containers have been unmounted"
-	fi
+
 	return 0
 }
 
