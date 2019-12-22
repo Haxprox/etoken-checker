@@ -173,7 +173,7 @@ if pFinder; then # Check whether the libraries are pre-installed.
 			pFinder --showp
 		;;
 		-c | --check)
-			pFinder
+			pFinder && echo -e "[\e[32mOK\e[0m]: Yup, you can use it."
 		;;
 		*)
 			help
