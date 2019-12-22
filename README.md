@@ -5,6 +5,7 @@ The script covers the next functionality: Unmount VeraCrypt encrypted volumes, O
 
 ## How does it work?
 When eToken or smart card is online, the agent is looping within pre-installed looptimer and checking when it will be disconnected. Once it's disconnected, different handlers are being called. Find it by the '--help' command.
+
 **NOTE**: The sciprt expects you're using 2FA for all mentioned feature solutions and impossible to do it without the eToken or smart card.
 
 ## Usage
