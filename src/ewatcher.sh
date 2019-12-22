@@ -29,29 +29,24 @@ help() {
 }
 
 pFinder() { # Show and find processes being used "libeToken.so" or "OpenSC".
-	
-	case "$1" in
-		-s | --showp)
+
+	if [[ -e /usr/lib/libeToken.so || -e /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so || -e /usr/lib64/opensc-pkcs11.so ]]; then
+		case "$1" in
+			-s | --showp)
 				$LSOF /usr/lib/libeToken.so /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so /usr/lib64/opensc-pkcs11.so 2> /dev/null | cut -d' ' -f 1-5
-		;;
-		-f | --find)
+			;;
+			-f | --find)
 				$LSOF -t /usr/lib/libeToken.so /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so /usr/lib64/opensc-pkcs11.so 2> /dev/null
-		;;
-		-c | --check)
-			if [[ -e /usr/lib/libeToken.so || -e /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so || -e /usr/lib64/opensc-pkcs11.so ]]; then
-				return 0
-			else
-				notify-send "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found"
-				notify-send "$(date +%H:%M)" "Please install openSC or eToken package libraries"
-				notify-send "$(date +%H:%M)" "The scirpt wont work and to be launched as well"
-				return 255
-			fi
-		;;
-		*)
-			echo "\e[102mInvalid option\e[0m"
-			return 255
-		;;
-	esac
+			;;
+		esac
+		return 0
+	else
+		notify-send "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found"
+		notify-send "$(date +%H:%M)" "Please install openSC or eToken package libraries"
+		notify-send "$(date +%H:%M)" "The scirpt wont work and to be launched as well"
+		return 255
+	fi
+				
 }
 
 eSaveSession() { # Execute save session command for each DE only once before 'eAgent' lopping. 
@@ -63,10 +58,12 @@ eSaveSession() { # Execute save session command for each DE only once before 'eA
 pKiller() { # Process killer
 	
 	local i
+	if [[ -e /usr/bin/keepassxc && $(pidof keepassxc) ]]; then # Keepassxc doesn't support pkcs provider yet.
+		sudo kill $(pidof keepassxc) && notify-send "$(date +%H:%M)" "Keepassxc password manager has been killed"
+	fi	
 	if [[ -e /usr/bin/veracrypt && $(pidof veracrypt) ]]; then
 		sudo veracrypt -d && notify-send "$(date +%H:%M)" "Veracrypt user's containers have been unmounted"
 	fi
-	
 	for i in $(pFinder -f); do
 		if sudo kill $i; then
 			notify-send "$(date +%H:%M)" "$i user process session has been killed"
@@ -76,11 +73,11 @@ pKiller() { # Process killer
 		fi
 		sleep 1
 	done
-	
-	if [[ -e /usr/bin/keepassxc && $(pidof keepassxc) ]]; then
-		sudo kill $(pidof keepassxc) && notify-send "$(date +%H:%M)" "Keepassxc password manager has been killed"
-	fi
+	return 0
+}
 
+eRunner() {
+	echo "0" # Application runner. Nothing yet. 
 	return 0
 }
 
@@ -124,94 +121,67 @@ eAgent() { # Main function
 			continue # Is it a great security idea to have automatic actions when the device is online? Hmmmm ...
 					 # Will see ...
 		else
-			case "$1" in
-				-n | --nolock)
-					if [[ $LOCKER_STATE == 0 ]]; then
+			if [[ $LOCKER_STATE == 0 ]]; then
+				case "$1" in
+					-n | --nolock)
 						LOCKER_STATE=1
 						pKiller
-					fi
-				;;
-				-l | --lock)
-					if [[ $LOCKER_STATE == 0 ]]; then
+					;;
+					-l | --lock)
 						LOCKER_STATE=1
 						eScreenLocker
-					fi
-				;;
-				-k | --knlock)
-					if [[ $LOCKER_STATE == 0 ]]; then
+					;;
+					-k | --knlock)
 						LOCKER_STATE=1
 						pKiller; eScreenLocker
-					fi
-				;;
-				-o | --logout)
-					if [[ $LOCKER_STATE == 0 ]]; then
+					;;
+					-o | --logout)
 						LOCKER_STATE=1
 						pKiller; eScreenLocker --logout
-					fi
-				;;
-				*)
-					echo "\e[102mInvalid option\e[0m"
-					exit 255
-				;;
-			esac
+					;;
+					*)
+						echo "\e[102mInvalid option\e[0m"
+						exit 255
+					;;
+				esac
+			fi
 		fi
 		sleep $LOOPTIMER
 	done
 	return 0
 }
 
-case "$1" in
-	-h | --help)
-		help
-	;;
-	-n | --nolock)
-		if pFinder --check; then # Check whether the libraries are pre-installed.
+if pFinder; then # Check whether the libraries are pre-installed.
+	case "$1" in
+		-h | --help)
+			help
+		;;
+		-n | --nolock)
 			eAgent --nolock
-		else
-			echo -e "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found" && \
-			echo -e "$(date +%H:%M)" "Please install openSC or eToken package libraries" && \
-			echo -e "$(date +%H:%M)" "The scirpt wont work and to be launched as well"
-			exit 255
-		fi
-	;;
-	-l | --lock)
-		if pFinder --check; then
+		;;
+		-l | --lock)
 			eAgent --lock
-		else
-			echo -e "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found" && \
-			echo -e "$(date +%H:%M)" "Please install openSC or eToken package libraries" && \
-			echo -e "$(date +%H:%M)" "The scirpt wont work and to be launched as well"
-			exit 255
-		fi
-	;;
-	-k | --knlock)
-		if pFinder --check; then
+		;;
+		-k | --knlock)
 			eAgent --knlock
-		else
-			echo -e "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found" && \
-			echo -e "$(date +%H:%M)" "Please install openSC or eToken package libraries" && \
-			echo -e "$(date +%H:%M)" "The scirpt wont work and to be launched as well"
-			exit 255
-		fi
-	;;
-	-o | --logout)
-		if pFinder --check; then
+		;;
+		-o | --logout)
 			# eSaveSession
 			eAgent --logout
-		else
-			echo -e "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found" && \
-			echo -e "$(date +%H:%M)" "Please install openSC or eToken package libraries" && \
-			echo -e "$(date +%H:%M)" "The scirpt wont work and to be launched as well"
-			exit 255
-		fi
-	;;
-	-s | --showp)
-		pFinder --showp
-	;;
-	-c | --check)
-		pFinder --check
-	;;
-	*)
-		help
-	;;
-esac
+		;;
+		-s | --showp)
+			pFinder --showp
+		;;
+		-c | --check)
+			pFinder
+		;;
+		*)
+			help
+		;;
+	esac
+else
+	echo -e "$(date +%H:%M)" "There is no lsof command or 'libeToken.so' and 'opensc-pkcs11.so' files have been found" && \
+	echo -e "$(date +%H:%M)" "Please install openSC or eToken package libraries" && \
+	echo -e "$(date +%H:%M)" "The scirpt wont work and to be launched as well"
+	exit 255
+fi
