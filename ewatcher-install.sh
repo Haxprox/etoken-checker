@@ -158,6 +158,7 @@ eAutostartInstall() {
 		echo -e "I need root permissions in order install 'ewatcher' sudoer file into '/etc/sudoers.d/' directory" && \
 		sleep 1 && \
 		chmod 440 etoken-checker/src/ewatcher && \
+		sudo cp etoken-checker/src/ewatcher.sh /usr/bin/ && \
 		sudo cp etoken-checker/src/ewatcher /etc/sudoers.d/
 	else
 		echo -e "Unable to find '~/.config/autostart' folder. Please, perform some tweaks or create it yourself and start installation again." && \
