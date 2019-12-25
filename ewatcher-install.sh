@@ -46,6 +46,7 @@ ePackInstall() { # OpenSC, lsof installation and probabaly the latest eToken, ru
 			sudo $pckmgr install -y "$i"
 		fi
 	done
+	return 0
 }
 
 pFinder() {
@@ -66,12 +67,13 @@ eClone() {
 	if [[ -x /usr/bin/git || -x /bin/git || -x $(which git) ]]; then
 		git clone https://github.com/Haxprox/etoken-checker
 	else
-		echo -n "There is no git command has been found. Would you like to install them now? y/n: "
+		echo -n "There is no git command has been found. Would you like to install them now? y/n: " && \
 		while read -r ny; do
 			case $ny in
 				yes | Yes | Y | y)
 					local packages=("git")
 					ePackInstall "${packages[@]}" && \
+					clear && \
 					eClone
 					break
 				;;
@@ -86,6 +88,7 @@ eClone() {
 			esac
 		done
 	fi
+	return 0
 }
 
 eInit() { # $1 -> ID variable should be here
@@ -162,6 +165,7 @@ eInit() { # $1 -> ID variable should be here
 		echo -e "There is no 'etoken-checker' folder has been found."
 		exit 126
 	fi
+	return 0
 }
 
 eAutostartInstall() {
