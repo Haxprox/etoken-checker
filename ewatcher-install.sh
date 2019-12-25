@@ -254,9 +254,9 @@ eSetup() {
 					case $selector in
 						Autostart)
 							eClone && \
-							eInit $ID --autostart
-							eAutostartInstall
-							rm -rf etoken-checker
+							eInit $ID --autostart && \
+							eAutostartInstall && \
+							rm -rf etoken-checker && \
 							echo -e "\e[32meToken-agent-watcher has been successfully installed and started.\e[0m"
 							bash ~/.config/autostart/ewatcher.sh $EWATCHER_PARAMETER &
 							break
