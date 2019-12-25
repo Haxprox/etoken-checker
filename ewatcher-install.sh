@@ -79,6 +79,8 @@ eClone() {
 					break
 				;;
 				no | No | N | n)
+					echo -e "No problem. Do it yourself and start installation one more time."
+					exit 255
 					break
 				;;
 				*)
@@ -87,8 +89,6 @@ eClone() {
 				;;
 			esac
 		done
-		#echo -e "There is no git or curl and unzip command has been found. Plesae install the mentioned applications according to your distro."
-		#exit 126
 	fi
 	return 0
 }
