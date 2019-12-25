@@ -41,15 +41,15 @@ Supported distros and environments:
 |	Mint		 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |	Manjaro		 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |	MX-Linux	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|   Fedora 29	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|   Fedora 30	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|   Fedora 31	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Fedora 29	 |  ❔  |  ❌  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Fedora 30	 |  ❔  |  ❌  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Fedora 31	 |  ❔  |  ❌  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 | Ubuntu 16.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 | Ubuntu 18.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 | Ubuntu 19.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 
 ✅ - Means `opensc, lsof`, packages can be installed and `~/.config/autostart/` folder is supported by default.
 
-❌ - Means `opensc, lsof` packages can't be installed or `~/.config/autostart/` folder is not supported by default. Additional actions are needed to continue.
+❌ - Means `opensc, lsof` packages can't be installed or `~/.config/autostart/` folder is not supported by default. Additional actions are needed during installation.
 
 ❔ - Means not tested so far.
