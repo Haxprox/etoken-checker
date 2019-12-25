@@ -67,6 +67,7 @@ pKiller() { # Process killer
 	for i in $(pFinder -f); do
 		if sudo kill $i; then
 			notify-send "$(date +%H:%M)" "$i user process session has been killed"
+			return 0
 		else
 			notify-send "$(date +%H:%M)" "Permission denied. Need to be root to kill $i"
 			return 255

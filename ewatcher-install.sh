@@ -31,17 +31,21 @@ ePckMgmtDetect() { # Returns the package manager is used on the current distro.
 	return 0
 }
 
-ePackInstall() { # OpenSC, lsof installation and probabaly the latest eToken, ruToken, etc drivers.		
-	
+ePackInstall() { # OpenSC, lsof installation and probabaly the latest eToken, ruToken, etc drivers.
+				 # parameters here are the packages.	
 	local pckmgr=$(ePckMgmtDetect)
-	if [ "$pckmgr" == "pacman" ]; then
-		sudo $pckmgr -Sy lsof opensc
-	elif [ "$pckmgr" == "emerge" ]; then
-		echo -e "Does not support yet, unfortunately. Install the packages manually and launch the installation one more time."
-		return 255
-	else
-		sudo $pckmgr install lsof opensc -y
-	fi
+	local arr=("$@")
+	local i
+	for i in "${arr[@]}"; do
+		if [ "$pckmgr" == "pacman" ]; then
+			sudo $pckmgr -Sy "$i"
+		elif [ "$pckmgr" == "emerge" ]; then
+			echo -e "Does not support yet, unfortunately. Install the packages manually and launch the installation one more time."
+			return 255
+		else
+			sudo $pckmgr install -y "$i"
+		fi
+	done
 }
 
 pFinder() {
@@ -66,8 +70,25 @@ eClone() {
 	elif [[ -x /usr/bin/unzip || -x /bin/unzip || -x $(which unzip) ]]; then
 		unzip etoken-checker.zip && mv etoken-checker-master etoken-checker
 	else
-		echo -e "There is no git or curl and unzip command has been found. Plesae install the mentioned applications according to your distro."
-		exit 126
+		echo -n "There is no git or curl and unzip command has been found. Would you like to install them now? y/n: "
+		while read -r ny; do
+			case $ny in
+				yes | Yes | Y | y)
+					local packages=("git" "curl" "unzip")
+					ePackInstall "${packages[@]}"
+					break
+				;;
+				no | No | N | n)
+					break
+				;;
+				*)
+					echo -e "Yes or No?"
+					continue
+				;;
+			esac
+		done
+		#echo -e "There is no git or curl and unzip command has been found. Plesae install the mentioned applications according to your distro."
+		#exit 126
 	fi
 	return 0
 }
@@ -276,7 +297,8 @@ else
 	while read -r yn; do
 		case $yn in
 			yes | Yes | Y | y)
-				ePackInstall && \
+				local packages=("lsof" "opensc")
+				ePackInstall "${packages[@]}" && \
 				eSetup
 				break
 			;;
