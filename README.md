@@ -45,10 +45,10 @@ Supported distros and environments:
 |   Fedora 30	 |  ❔  |  ❌  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |   Fedora 31	 |  ❔  |  ❌  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 | Ubuntu 16.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-| Ubuntu 18.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❌  |  ❔  |  ❔  |
+| Ubuntu 18.04	 |  ❔  |  ❔  |  ❔  |  ❌  |  ❔  |  ❔  |  ❔  |
 | Ubuntu 19.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 
-✅ - Means `opensc, lsof`, packages can be installed and `~/.config/autostart/` folder is supported by default.
+✅ - Means `opensc, lsof`, packages can be installed and `~/.config/autostart/` folder can be created.
 
 ❌ - Means `opensc, lsof` packages can't be installed or `~/.config/autostart/` folder is not supported by default. **Additional actions are needed during installation.**
 
@@ -56,6 +56,6 @@ Supported distros and environments:
 
 ### Common issues:
 ```
-Unable to find '~/.config/autostart' folder. Please, perform some tweaks or create it yourself and start installation again.
+Unable to create '~/.config/autostart' folder. Please, perform some tweaks or create it yourself and start installation again.
 ```
 The script has detected an missconfiguration with 'autostart' startup folder. It's not predefined by default. Need to create this folder manually or using distro's(DE) tweak tool.

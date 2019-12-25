@@ -169,8 +169,8 @@ eInit() { # $1 -> ID variable should be here
 }
 
 eAutostartInstall() {
-	
-	if [[ -d ~/.config/autostart ]]; then
+
+	if mkdir -p ~/.config/autostart; then
 		cp etoken-checker/src/ewatcher.desktop ~/.config/autostart/ && \
 		cp etoken-checker/src/ewatcher.sh ~/.config/autostart/ && \
 		sudo -k && \
@@ -178,12 +178,13 @@ eAutostartInstall() {
 		sleep 1 && \
 		chmod 440 etoken-checker/src/ewatcher && \
 		sudo cp etoken-checker/src/ewatcher.sh /usr/bin/ && \
-		sudo cp etoken-checker/src/ewatcher /etc/sudoers.d/
-	else
-		echo -e "Unable to find '~/.config/autostart' folder. Please, perform some tweaks or create it yourself and start installation again." && \
+		sudo cp etoken-checker/src/ewatcher /etc/sudoers.d/ && \
 		rm -rf etoken-checker
+	else
+		echo -e "Unable to create '~/.config/autostart' folder. Please, perform some tweaks or create it yourself and start installation again."
 		exit 255
 	fi
+	return 0
 }
 
 eUnitInstall() {
