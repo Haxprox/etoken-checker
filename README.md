@@ -4,7 +4,7 @@ Background bash process is watching for eToken USB serial or smart card status a
 The script covers the next functionality: Unmount VeraCrypt encrypted volumes, OpenVPN and SSH disconnecting sessions, Keepass{xc} DB closer, screen locker or logout callers.
 
 ## How does it work?
-When eToken or smart card is online, the agent is looping within pre-installed looptimer and checking when it will be disconnected. Once it's disconnected, different handlers are being called. Find it by the '--help' command.
+When eToken or smart card is online, the agent is looping within pre-installed looptimer and checking when it will be disconnected. Once it's disconnected, different handlers are being called. Find it by the **--help** command.
 
 **NOTE**: The script expects you're using 2FA for all mentioned feature solutions and impossible to do it without the eToken or smart card.
 
@@ -50,6 +50,6 @@ Supported distros and environments:
 
 ✅ - Means `opensc, lsof`, packages can be installed and `~/.config/autostart/` folder is supported by default.
 
-❌ - Means `opensc, lsof` packages can't be installed or `~/.config/autostart/` folder is not supported by default. Additional actions are needed during installation.
+❌ - Means `opensc, lsof` packages can't be installed or `~/.config/autostart/` folder is not supported by default. **Additional actions are needed during installation.**
 
 ❔ - Means not tested so far.

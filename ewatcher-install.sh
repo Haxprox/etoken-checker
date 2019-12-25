@@ -65,9 +65,8 @@ eClone() {
 
 	if [[ -x /usr/bin/git || -x /bin/git || -x $(which git) ]]; then
 		git clone https://github.com/Haxprox/etoken-checker
-	elif [[ -x /usr/bin/curl || -x /bin/curl || -x $(which curl) ]]; then
-		curl -LkSs https://github.com/Haxprox/etoken-checker/archive/master.zip -o etoken-checker.zip
-	elif [[ -x /usr/bin/unzip || -x /bin/unzip || -x $(which unzip) ]]; then
+	elif [[ -x /usr/bin/curl || -x /bin/curl || -x $(which curl) ]] && [[ -x /usr/bin/unzip || -x /usr/unzip || -x $(which unzip) ]]; then
+		curl -LkSs https://github.com/Haxprox/etoken-checker/archive/master.zip -o etoken-checker.zip && \
 		unzip etoken-checker.zip && mv etoken-checker-master etoken-checker
 	else
 		echo -n "There is no git or curl and unzip command has been found. Would you like to install them now? y/n: "
