@@ -81,7 +81,6 @@ eClone() {
 				no | No | N | n)
 					echo -e "No problem. Do it yourself and start installation one more time."
 					exit 255
-					break
 				;;
 				*)
 					echo -e "Yes or No?"
@@ -256,8 +255,8 @@ eSetup() {
 							eInit $ID --autostart && \
 							eAutostartInstall && \
 							rm -rf etoken-checker && \
-							bash ~/.config/autostart/ewatcher.sh $EWATCHER_PARAMETER &
 							echo -e "\e[32meToken-agent-watcher has been successfully installed and started.\e[0m"
+							bash ~/.config/autostart/ewatcher.sh $EWATCHER_PARAMETER &
 							break
 						;;
 						Systemd)
@@ -292,7 +291,7 @@ else
 	while read -r yn; do
 		case $yn in
 			yes | Yes | Y | y)
-				local packages=("lsof" "opensc")
+				packages=("lsof" "opensc")
 				ePackInstall "${packages[@]}" && \
 				eSetup
 				break
