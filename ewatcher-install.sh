@@ -193,10 +193,9 @@ eUnitInstall() {
 	sudo -k && \
 	sudo cp etoken-checker/src/ewatcher.sh /usr/bin/ && \
 	sudo cp etoken-checker/src/ewatcher.service /etc/systemd/system/ && \
-	echo -e "The 'ewatcher.sh' and 'ewatcher.service' files have been installed"
-	sleep 1
+	echo -e "The 'ewatcher.sh' and 'ewatcher.service' files have been installed" && \
 	#===================================================================================================================
-	echo -n "Would you like to start 'ewatcher.service' on boot? y/n: "
+	echo -n "Would you like to start 'ewatcher.service' on boot? y/n: " && \
 	while read -r yn; do
 		case $yn in
 			yes | Yes | Y | y)
@@ -213,7 +212,7 @@ eUnitInstall() {
 						break
 					;;
 					no | No | N | n)
-						break
+						return 0
 					;;
 					*)
 						echo -e "Yes or No?"
@@ -255,7 +254,7 @@ eSetup() {
 							eInit $ID --autostart && \
 							eAutostartInstall && \
 							rm -rf etoken-checker && \
-							echo -e "\e[32meToken-agent-watcher has been successfully installed and started.\e[0m"
+							echo -e "\e[32meToken-agent-watcher has been successfully installed and started.\e[0m" && \
 							bash ~/.config/autostart/ewatcher.sh $EWATCHER_PARAMETER &
 							break
 						;;
@@ -263,8 +262,8 @@ eSetup() {
 							eClone && \
 							eInit $ID --systemd && \
 							eUnitInstall && \
-							rm -rf etoken-checker && \
 							echo -e "\e[32meToken-agent-watcher has been successfully installed!\e[0m"
+							rm -rf etoken-checker
 							break
 						;;
 						*)
