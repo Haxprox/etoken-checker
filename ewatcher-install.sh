@@ -135,22 +135,22 @@ eInit() { # $1 -> ID variable should be here
 			elif [[ $2 == "--autostart" ]]; then
 			case $parameter in
 				--nolock)
-					sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop
+					sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop && \
 					EWATCHER_PARAMETER=$parameter
 					break
 				;;
 				--lock)
-					sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop
+					sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop && \
 					EWATCHER_PARAMETER=$parameter
 					break
 				;;
 				--knlock)
-					sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop
+					sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop && \
 					EWATCHER_PARAMETER=$parameter
 					break
 				;;				
 				--logout)
-					sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop
+					sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop && \
 					EWATCHER_PARAMETER=$parameter
 					break
 				;;
@@ -254,10 +254,10 @@ eSetup() {
 					case $selector in
 						Autostart)
 							eClone && \
-							eInit $ID --autostart && \
-							eAutostartInstall && \
-							rm -rf etoken-checker && \
-							echo -e "\e[32meToken-agent-watcher has been successfully installed and started.\e[0m" && \
+							eInit $ID --autostart
+							eAutostartInstall
+							rm -rf etoken-checker
+							echo -e "\e[32meToken-agent-watcher has been successfully installed and started.\e[0m"
 							bash ~/.config/autostart/ewatcher.sh $EWATCHER_PARAMETER &
 							break
 						;;
