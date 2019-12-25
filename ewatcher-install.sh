@@ -65,16 +65,14 @@ eClone() {
 
 	if [[ -x /usr/bin/git || -x /bin/git || -x $(which git) ]]; then
 		git clone https://github.com/Haxprox/etoken-checker
-	elif [[ -x /usr/bin/curl || -x /bin/curl || -x $(which curl) ]] && [[ -x /usr/bin/unzip || -x /usr/unzip || -x $(which unzip) ]]; then
-		curl -o etoken-checker.zip https://github.com/Haxprox/etoken-checker/archive/master.zip && \
-		unzip etoken-checker.zip && mv etoken-checker-master etoken-checker
 	else
-		echo -n "There is no git or curl and unzip command has been found. Would you like to install them now? y/n: "
+		echo -n "There is no git command has been found. Would you like to install them now? y/n: "
 		while read -r ny; do
 			case $ny in
 				yes | Yes | Y | y)
-					local packages=("git" "curl" "unzip")
-					ePackInstall "${packages[@]}"
+					local packages=("git")
+					ePackInstall "${packages[@]}" && \
+					eClone
 					break
 				;;
 				no | No | N | n)
