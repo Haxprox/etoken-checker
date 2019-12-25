@@ -58,10 +58,11 @@ eSaveSession() { # Execute save session command for each DE only once before 'eA
 pKiller() { # Process killer
 	
 	local i
-	if [[ -e /usr/bin/keepassxc && $(pidof keepassxc) ]]; then # Keepassxc doesn't support pkcs provider yet.
+	if [[ -e /usr/bin/keepassxc && $(pidof keepassxc) ]]; then
+		# Keepassxc doesn't support pkcs provider as application for linux. So will be killed anyway totally.
 		sudo kill $(pidof keepassxc) && notify-send "$(date +%H:%M)" "Keepassxc password manager has been killed"
 	fi	
-	if [[ -e /usr/bin/veracrypt && $(pidof veracrypt) ]]; then
+	if [[ -e /usr/bin/veracrypt && $(pidof veracrypt) ]]; then # Unmount containers at first then kill application.
 		sudo veracrypt -d && notify-send "$(date +%H:%M)" "Veracrypt user's containers have been unmounted"
 	fi
 	for i in $(pFinder -f); do
@@ -78,7 +79,7 @@ pKiller() { # Process killer
 }
 
 eRunner() {
-	echo "0" # Application runner. Nothing yet. 
+	echo "0" # Application runner whent eToken is online. Nothing yet. 
 	return 0
 }
 

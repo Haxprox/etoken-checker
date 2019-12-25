@@ -229,6 +229,7 @@ eUnitInstall() {
 		esac
 		break
 	done
+	return 0
 }
 
 eSetup() {
