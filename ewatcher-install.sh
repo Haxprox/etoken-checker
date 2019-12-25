@@ -90,7 +90,6 @@ eClone() {
 			esac
 		done
 	fi
-	return 0
 }
 
 eInit() { # $1 -> ID variable should be here
@@ -167,7 +166,6 @@ eInit() { # $1 -> ID variable should be here
 		echo -e "There is no 'etoken-checker' folder has been found."
 		exit 126
 	fi
-	return 0
 }
 
 eAutostartInstall() {
@@ -186,7 +184,6 @@ eAutostartInstall() {
 		rm -rf etoken-checker
 		exit 255
 	fi
-	return 0
 }
 
 eUnitInstall() {
@@ -234,7 +231,6 @@ eUnitInstall() {
 		esac
 		break
 	done
-	return 0
 }
 
 eSetup() {
@@ -273,7 +269,7 @@ eSetup() {
 							break
 						;;
 						*)
-							echo -e "Wrong, try one more time and do it сonsciously. I believe in you!"
+							echo -e "Wrong, try one more time and do it сonsciously. 1 or 2? I believe in you!"
 							continue
 						;;				
 					esac
@@ -285,7 +281,6 @@ eSetup() {
 		echo -e "Unable to find ID you specified or format is unavailable. Please, try again or insert a new device"
 		sleep 2
 	done
-	return 0
 }
 
 if pFinder; then
