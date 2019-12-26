@@ -27,6 +27,10 @@ bash ewatcher-install.sh
 
 ## Compatibility
 
+**A** -> autostart feature
+
+**S** -> systemd daemon
+
 Supported distros and environments:
 
 |                | KDE | Gnome 3 | Cinnamon | MATE | Xfce4 | LXQT | LXDE |
@@ -41,16 +45,17 @@ Supported distros and environments:
 |	Mint		 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |	Manjaro		 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |	MX-Linux	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|   Fedora 29	 |  ❔  |  ❌  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|   Fedora 30	 |  ❔  |  ❌  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|   Fedora 31	 |  ❔  |  ❌  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Fedora 29	 |  ❔  |A✅S✅|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Fedora 30	 |  ❔  |A✅S✅|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Fedora 31	 |  ❔  |A✅S✅|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 | Ubuntu 16.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-| Ubuntu 18.04	 |  ❔  |  ❔  |  ❔  |  ❌  |  ❔  |  ❔  |  ❔  |
+| Ubuntu 18.04	 |  ❔  |  ❔  |  ❔  |A✅S✅|  ❔  |  ❔  |  ❔  |
 | Ubuntu 19.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 
-✅ - Means `opensc, lsof`, packages can be installed and `~/.config/autostart/` folder can be created.
+✅ - Means `opensc, lsof`, packages can be installed and `~/.config/autostart/` folder is able to be created. The distro supports `Systemd` as the main spawner.
 
 ❌ - Means `opensc, lsof` packages can't be installed or `~/.config/autostart/` folder is not supported by default. **Additional actions are needed during installation.**
+`Systemd` is not supported as the main spawner.
 
 ❔ - Means not tested so far.
 
