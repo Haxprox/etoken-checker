@@ -27,9 +27,9 @@ bash ewatcher-install.sh
 
 ## Compatibility
 
-**A** -> autostart feature
+**A** - autostart feature
 
-**S** -> systemd daemon
+**S** - systemd daemon
 
 Supported distros and environments:
 
@@ -42,9 +42,10 @@ Supported distros and environments:
 |   CentOS 7	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |   Debian 9	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |   Debian 10	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|	Mint		 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Bunsenlabs	 |  -  |  -  |  -  |  -  |  -  |  -  |  -  |
+|	Mint		 |  -  |  -  |  ❔  |  ❔  |  ❔  |  -  |  -  |
 |	Manjaro		 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|	MX-Linux	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|	MX-Linux	 |  -  |  -  |  -  |  -  |  ❔  |  -  |  -  |
 |   Fedora 29	 |  ❔  |A✅S✅|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |   Fedora 30	 |  ❔  |A✅S✅|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |   Fedora 31	 |  ❔  |A✅S✅|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |

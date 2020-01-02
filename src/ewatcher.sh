@@ -10,7 +10,8 @@
 #############################################################################################################################################################################
 
 declare -ri LOOPTIMER=5
-declare -r LSOF=/usr/bin/lsof
+declare -r LSOF=$(which lsof)
+declare -r LOGINCTL=$(which loginctl)
 declare -r etokenID=0529:0600 # Find and specify your eToken or smart-card ID here using 'lsusb' command. 
 
 help() {
@@ -93,13 +94,13 @@ eScreenLocker() { # Session locker or logout caller
 				-o | --logout)
 					notify-send "$(date +%H:%M)" "Logout";
 					sleep 1
-					sudo loginctl terminate-user $(whoami)
+					sudo $LOGINCTL terminate-user $(whoami)
 				;;					
 				*)
 					notify-send "$(date +%H:%M)" "Locked"
 					sleep 1
-					for j in $(loginctl list-sessions | grep seat | awk '{print $1}'); do 
-						sudo loginctl lock-session $j
+					for j in $($LOGINCTL list-sessions | grep seat | awk '{print $1}'); do 
+						sudo $LOGINCTL lock-session $j
 					done
 				;;
 			esac
