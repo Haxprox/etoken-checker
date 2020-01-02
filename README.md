@@ -46,16 +46,16 @@ Supported distros and environments:
 |	Mint		 |  -  |  -  |  ❔  |  ❔  |  ❔  |  -  |  -  |
 |	Manjaro		 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |	MX-Linux	 |  -  |  -  |  -  |  -  |  ❔  |  -  |  -  |
-|   Fedora 29	 |  ❔  |A:white_check_mark:S:white_check_mark:|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Fedora 29	 |  ❔  |A✔S✔|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |   Fedora 30	 |  ❔  |A✔S✔|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |   Fedora 31	 |  ❔  |A✔S✔|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 | Ubuntu 16.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 | Ubuntu 18.04	 |  ❔  |  ❔  |  ❔  |A✔S✔|  ❔  |  ❔  |  ❔  |
 | Ubuntu 19.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 
-✔ - Means `opensc, lsof`, packages can be installed and `~/.config/autostart/` folder is able to be created. The distro supports `Systemd` as the main spawner.
+:heavy_check_mark: - Means `opensc, lsof`, packages can be installed and `~/.config/autostart/` folder is able to be created. The distro supports `Systemd` as the main spawner.
 
-:white_check_mark: - Means `opensc, lsof` packages can't be installed or `~/.config/autostart/` folder is not supported by default. **Additional actions are needed during installation.**
+❌ - Means `opensc, lsof` packages can't be installed or `~/.config/autostart/` folder is not supported by default. **Additional actions are needed during installation.**
 `Systemd` is not supported as the main spawner.
 
 ❔ - Means not tested so far.
