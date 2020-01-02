@@ -2,7 +2,7 @@
 
 #############################################################################################################################################################################
 # Script Name	:	ewatcher.sh (ewatcher.service unit)
-# Description	:	Background bash process is watching for eToken USB serial status and makes decision for killing all processes that were authorized by the eToken.
+# Description	:	Background bash process is watching for 2FA USB serial device status and makes decision for killing all processes that were authorized by one of the configured device.
 # Terminating	:	SSH(1) : OpenVPN{1} -> VeraCrypt{2} -> locking(none locking){3} or logout{3} with saving DE session.
 # Args			:	Optional { '-h | --help', '-s | --showp', '-n | --nolock', '-l | --lock', '-k | --knlock', '-o | --logout', -c | --check }
 # Author		:	Jaroslav Popel
@@ -19,11 +19,11 @@ help() {
 	echo "Usage: $0 [option...]"
 	echo
 	echo "-h, --help	Show help dialog."
-	echo "-s  --showp	Show processes eToken uses."
-	echo "-n, --nolock	Suppress DE locker and kill related eToken processes."
+	echo "-s  --showp	Show processes 2FA device uses."
+	echo "-n, --nolock	Suppress DE locker and kill related processes."
 	echo "-l, --lock	Just call DE locker and nothing more. PAM pre-installed authentication is expected here."
-	echo "-k, --knlock	Kill everything related to the eToken and lock."
-	echo "-o, --logout	Kill everything related to the eToken and logout."
+	echo "-k, --knlock	Kill everything that related to the 2FA device and lock."
+	echo "-o, --logout	Kill everything that related to the 2FA device and logout."
 	echo "-c, --check	Check whether the libraries are pre-installed."
 	echo
 	return 0

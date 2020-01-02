@@ -5,10 +5,10 @@ EWATCHER_PARAMETER="--nolock"
 help() {
 	
 	echo "========================================================================================"
-	echo "--nolock	Suppress DE locker and kill related eToken processes."
+	echo "--nolock	Suppress DE locker and kill related 2FA device processes."
 	echo "--lock	Just call DE locker and nothing more. PAM pre-installed authentication is expected here."
-	echo "--knlock	Kill everything related to the eToken and lock."
-	echo "--logout	Kill everything related to the eToken and logout."
+	echo "--knlock	Kill everything that related to the current 2FA device and lock."
+	echo "--logout	Kill everything that related to the current 2FA device and logout."
 	echo "========================================================================================"
 	return 0
 }
@@ -241,7 +241,7 @@ eSetup() {
 		echo "=============================================================================="
 		lsusb
 		echo "=============================================================================="
-		echo -e "\e[32mNOTE:\e[0m Insert your USB eToken or SmartCard device and type anything to refresh USB device list."
+		echo -e "\e[32mNOTE:\e[0m Insert your USB eToken, SmartCard or Yubikey device and type anything to refresh USB device list."
 		echo -e "Please, specify your current eToken ID from existed ID list. Format \e[91m0000:XXXX\e[0m"
 		echo -n "ID="
 		read ID

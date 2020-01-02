@@ -1,12 +1,12 @@
 
 ## eToken-agent-watcher
-Background bash process is watching for eToken USB serial or smart card status and makes a decision for killing all processes that were authorized by the eToken or any smart card device.
+Background bash process is watching for eToken USB serial, smart card or Yubikey status and makes a decision for killing all processes that were authorized by any device.
 The script covers the next functionality: Unmount VeraCrypt encrypted volumes, OpenVPN and SSH disconnecting sessions, Keepass{xc} DB closer, screen locker or logout callers.
 
 ## How does it work?
-When eToken or smart card is online, the agent is looping within pre-installed looptimer and checking when it will be disconnected. Once it's disconnected, different handlers are being called. Find it by the **--help** command.
+When eToken, smart card or Yubikey is online, the agent is looping within pre-installed looptimer and checking when it will be disconnected. Once it's disconnected, different handlers are being called. Find it by the **--help** command.
 
-**NOTE**: The script expects you're using 2FA for all mentioned feature solutions and impossible to do it without the eToken or smart card.
+**NOTE**: The script expects you're using 2FA for all mentioned feature solutions and impossible to do it without the eToken, Smart card or Yubikey.
 
 ## Usage
 ### Installation:
@@ -18,7 +18,7 @@ curl -O https://raw.githubusercontent.com/Haxprox/etoken-checker/master/ewatcher
 ```
 bash ewatcher-install.sh
 ```
-**You will be prompted to specify your current eToken or smart card ID, agent parameters and systemd/autostart daemon ways.**
+**You will be prompted to specify your current eToken, smart card or Yubikey ID, agent parameters and systemd/autostart daemon ways.**
 
 **NOTE**: The script is based on `Systemd` and built-in desktop `autostart` feature. 
 `Systemd` way doesn't support desktop notifications. The preferable way is to choose `autostart` option.
