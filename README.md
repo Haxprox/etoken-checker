@@ -1,7 +1,7 @@
 
 ## eToken-agent-watcher
 Background bash process is watching for eToken USB serial, smart card or Yubikey status and makes a decision for killing all processes that were authorized by any device.
-The script covers the next functionality: Unmount VeraCrypt encrypted volumes, OpenVPN and SSH disconnecting sessions, Keepass{xc} DB closer, screen locker or logout callers.
+The script covers the next functionality: Unmount VeraCrypt encrypted volumes, terminating OpenVPN and SSH sessions, Keepass{xc} DB closer, screen locker or logout caller.
 
 ## How does it work?
 When eToken, smart card or Yubikey is online, the agent is looping within pre-installed looptimer and checking when it will be disconnected. Once it's disconnected, different handlers are being called. Find it by the **--help** command.
@@ -46,14 +46,14 @@ Supported distros and environments:
 |	Mint		 |  -  |  -  |  ❔  |  ❔  |  ❔  |  -  |  -  |
 |	Manjaro		 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |	MX-Linux	 |  -  |  -  |  -  |  -  |  ❔  |  -  |  -  |
-|   Fedora 29	 |  ❔  |A✅S✅|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|   Fedora 30	 |  ❔  |A✅S✅|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|   Fedora 31	 |  ❔  |A✅S✅|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Fedora 29	 |  ❔  |A✓S✓|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Fedora 30	 |  ❔  |A✓S✓|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Fedora 31	 |  ❔  |A✓S✓|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 | Ubuntu 16.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-| Ubuntu 18.04	 |  ❔  |  ❔  |  ❔  |A✅S✅|  ❔  |  ❔  |  ❔  |
+| Ubuntu 18.04	 |  ❔  |  ❔  |  ❔  |A✓S✓|  ❔  |  ❔  |  ❔  |
 | Ubuntu 19.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 
-✅ - Means `opensc, lsof`, packages can be installed and `~/.config/autostart/` folder is able to be created. The distro supports `Systemd` as the main spawner.
+✓ - Means `opensc, lsof`, packages can be installed and `~/.config/autostart/` folder is able to be created. The distro supports `Systemd` as the main spawner.
 
 ❌ - Means `opensc, lsof` packages can't be installed or `~/.config/autostart/` folder is not supported by default. **Additional actions are needed during installation.**
 `Systemd` is not supported as the main spawner.
