@@ -46,11 +46,11 @@ Supported distros and environments:
 |	Mint		 |  -  |  -  |  ❔  |  ❔  |  ❔  |  -  |  -  |
 |	Manjaro		 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |	MX-Linux	 |  -  |  -  |  -  |  -  |  ❔  |  -  |  -  |
-|   Fedora 29	 |  ❔  |A✔S✔|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|   Fedora 30	 |  ❔  |A✔S✔|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|   Fedora 31	 |  ❔  |A✔S✔|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Fedora 29	 |  ❔  |A:heavy_check_mark:️S:heavy_check_mark:️|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Fedora 30	 |  ❔  |A:heavy_check_mark:️S:heavy_check_mark:️|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+|   Fedora 31	 |  ❔  |A:heavy_check_mark:️S:heavy_check_mark:️|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 | Ubuntu 16.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-| Ubuntu 18.04	 |  ❔  |  ❔  |  ❔  |A✔S✔|  ❔  |  ❔  |  ❔  |
+| Ubuntu 18.04	 |  ❔  |  ❔  |  ❔  |A:heavy_check_mark:S:heavy_check_mark:|  ❔  |  ❔  |  ❔  |
 | Ubuntu 19.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 
 :heavy_check_mark: - Means `opensc, lsof`, packages can be installed and `~/.config/autostart/` folder is able to be created. The distro supports `Systemd` as the main spawner.
@@ -65,3 +65,6 @@ Supported distros and environments:
 Unable to create '~/.config/autostart' folder. Please, perform some tweaks or create it yourself and start installation again.
 ```
 The script has detected an missconfiguration with 'autostart' startup folder. It's not predefined by default. Need to create this folder manually or using distro's(DE) tweak tool.
+
+&#9746;
+&#9745;
