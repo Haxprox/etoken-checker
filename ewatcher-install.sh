@@ -102,63 +102,57 @@ eInit() { # $1 -> ID variable should be here
 		help
 		select parameter in --nolock --lock --knlock --logout; do
 			if [[ $2 == "--systemd" ]]; then
-			case $parameter in
-				--nolock)
-					sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service && \
-					sed -i "/User=/c User=$currentUser" etoken-checker/src/ewatcher.service && \
-					sed -i "/Group=/c User=$ownGroup" etoken-checker/src/ewatcher.service && \
-					break
-				;;
-				--lock)					
-					sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service && \
-					sed -i "/User=/c User=$currentUser" etoken-checker/src/ewatcher.service && \
-					sed -i "/Group=/c User=$ownGroup" etoken-checker/src/ewatcher.service && \
-					break
-				;;
-				--knlock)
-					sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service && \
-					sed -i "/User=/c User=$currentUser" etoken-checker/src/ewatcher.service && \
-					sed -i "/Group=/c User=$ownGroup" etoken-checker/src/ewatcher.service && \
-					break
-				;;				
-				--logout)
-					sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service && \
-					sed -i "/User=/c User=$currentUser" etoken-checker/src/ewatcher.service && \
-					sed -i "/Group=/c User=$ownGroup" etoken-checker/src/ewatcher.service && \
-					break
-				;;
-				*)
-					echo -e "Wrong, try one more time and do it сonsciously. I believe in you!"
-					continue
-				;;
-			esac
+				sed -i "/User=/c User=$currentUser" etoken-checker/src/ewatcher.service && \
+				sed -i "/Group=/c User=$ownGroup" etoken-checker/src/ewatcher.service
+				case $parameter in
+					--nolock)
+						sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service && \
+						break
+					;;
+					--lock)					
+						sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service && \
+						break
+					;;
+					--knlock)
+						sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service && \
+						break
+					;;				
+					--logout)
+						sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service && \
+						break
+					;;
+					*)
+						echo -e "Wrong, try one more time and do it сonsciously. I believe in you!"
+						continue
+					;;
+				esac
 			elif [[ $2 == "--autostart" ]]; then
-			case $parameter in
-				--nolock)
-					sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop && \
-					EWATCHER_PARAMETER=$parameter
-					break
-				;;
-				--lock)
-					sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop && \
-					EWATCHER_PARAMETER=$parameter
-					break
-				;;
-				--knlock)
-					sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop && \
-					EWATCHER_PARAMETER=$parameter
-					break
-				;;				
-				--logout)
-					sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop && \
-					EWATCHER_PARAMETER=$parameter
-					break
-				;;
-				*)
-					echo -e "Wrong, try one more time and do it сonsciously. I believe in you!"
-					continue
-				;;
-			esac				
+				case $parameter in
+					--nolock)
+						sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop && \
+						EWATCHER_PARAMETER=$parameter
+						break
+					;;
+					--lock)
+						sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop && \
+						EWATCHER_PARAMETER=$parameter
+						break
+					;;
+					--knlock)
+						sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop && \
+						EWATCHER_PARAMETER=$parameter
+						break
+					;;				
+					--logout)
+						sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop && \
+						EWATCHER_PARAMETER=$parameter
+						break
+					;;
+					*)
+						echo -e "Wrong, try one more time and do it сonsciously. I believe in you!"
+						continue
+					;;
+				esac				
 			fi
 		done			
 	else
