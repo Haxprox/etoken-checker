@@ -293,7 +293,7 @@ else
 	while read -r yn; do
 		case $yn in
 			yes | Yes | Y | y)
-				packages=("lsof" "opensc")
+				packages=("lsof" "opensc" "libnotify-bin")
 				ePackInstall "${packages[@]}" && \
 				eSetup
 				break
