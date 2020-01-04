@@ -45,13 +45,13 @@ Supported distros and environments:
 |   Bunsenlabs	 |  -  |  -  |  -  |  -  |  -  |  -  |  -  |
 |	Mint		 |  -  |  -  |  ❔  |  ❔  |  ❔  |  -  |  -  |
 |	Manjaro		 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|	MX-Linux	 |  -  |  -  |  -  |  -  |  ❔  |  -  |  -  |
+|	MX-Linux	 |  -  |  -  |  -  |  -  |  A:heavy_check_mark:S❌  |  -  |  -  |
 |   Fedora 29	 |  ❔  |A:heavy_check_mark:️S:heavy_check_mark:️|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |   Fedora 30	 |  ❔  |A:heavy_check_mark:️S:heavy_check_mark:️|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |   Fedora 31	 |  ❔  |A:heavy_check_mark:️S:heavy_check_mark:️|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-| Ubuntu 16.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-| Ubuntu 18.04	 |  ❔  |  ❔  |  ❔  |A:heavy_check_mark:S:heavy_check_mark:|  ❔  |  ❔  |  ❔  |
-| Ubuntu 19.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+| [xU]buntu 16.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+| [xU]Ubuntu 18.04	 |  A:heavy_check_mark:️S:heavy_check_mark:️  |  ❔  |  ❔  |A:heavy_check_mark:S:heavy_check_mark:|  ❔  |  ❔  |  ❔  |
+| [xU]Ubuntu 19.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 
 :heavy_check_mark: - Means `opensc, lsof, libnotify-bin`, packages can be installed and `~/.config/autostart/` folder is able to be created. The distro supports `Systemd` as the main spawner.
 

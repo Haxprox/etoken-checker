@@ -67,7 +67,7 @@ eClone() {
 	if [[ -x /usr/bin/git || -x /bin/git || -x $(which git) ]]; then
 		git clone https://github.com/Haxprox/etoken-checker
 	else
-		echo -n "There is no git command has been found. Would you like to install them now? y/n: " && \
+		echo -n "There is no git command has been found. Would you like to install it now? y/n: " && \
 		while read -r ny; do
 			case $ny in
 				yes | Yes | Y | y)
