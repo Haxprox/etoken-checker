@@ -49,14 +49,14 @@ Supported distros and environments:
 |   Fedora 29	 |  ❔  |A:heavy_check_mark:️S:heavy_check_mark:️|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |   Fedora 30	 |  ❔  |A:heavy_check_mark:️S:heavy_check_mark:️|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |   Fedora 31	 |  ❔  |A:heavy_check_mark:️S:heavy_check_mark:️|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-| [xU]buntu 16.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-| [xU]Ubuntu 18.04	 |  A:heavy_check_mark:️S:heavy_check_mark:️  |  ❔  |  ❔  |A:heavy_check_mark:S:heavy_check_mark:|  ❔  |  ❔  |  ❔  |
-| [xU]Ubuntu 19.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+| {?U}buntu 16.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
+| {?U}buntu 18.04	 |  A:heavy_check_mark:️S:heavy_check_mark:️  |  ❔  |  ❔  |A:heavy_check_mark:S:heavy_check_mark:|  ❔  |  ❔  |  ❔  |
+| {?U}buntu 19.04	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 
 :heavy_check_mark: - Means `opensc, lsof, libnotify-bin`, packages can be installed and `~/.config/autostart/` folder is able to be created. The distro supports `Systemd` as the main spawner.
 
 ❌ - Means `opensc, lsof, libnotify-bin` packages can't be installed or `~/.config/autostart/` folder is not supported by default. **Additional actions are needed during installation.**
-`Systemd` is not supported as the main spawner.
+<u>`Systemd` is not supported as the main spawner.</u>
 
 ❔ - Means not tested so far.
 
