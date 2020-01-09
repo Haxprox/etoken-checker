@@ -21,7 +21,7 @@ bash ewatcher-install.sh
 **You will be prompted to specify your current eToken, smart card or Yubikey ID, agent parameters and Systemd/Autostart daemon ways.**
 
 **NOTE**: The script is based on `Systemd` and built-in desktop `Autostart` feature. 
-`Systemd` way doesn't support desktop notifications. The preferable way is to choose `Autostart` option.
+`Systemd` way doesn't support desktop notifications yet. The preferable way is to choose `Autostart` option.
 
 3. Watcher now is deamonized and working. You can now test it by plug/unplug the device. 
 
@@ -40,7 +40,6 @@ Supported distros and environments:
 |	Elementary	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |   CentOS 8	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |   CentOS 7	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|   Debian 9	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |   Debian 10	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |   Bunsenlabs	 |  -  |  -  |  -  |  -  |  -  |  -  |  -  |
 |	Mint		 |  -  |  -  |  ❔  |  ❔  |  ❔  |  -  |  -  |

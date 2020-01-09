@@ -80,7 +80,7 @@ pKiller() { # Process killer
 }
 
 eRunner() {
-	echo "0" # Application runner when eToken is online. Nothing yet. 
+	echo "0" # Application runner when the device is online. Nothing yet. 
 	return 0
 }
 
