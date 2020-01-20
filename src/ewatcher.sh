@@ -112,6 +112,12 @@ eScreenLocker() { # Session locker or logout caller
 	return 0
 }
 
+ePower() {
+	
+	#Power management when Token is offline. The disk should be encrypted by default in order to have this reasonable.
+	return 0
+}
+
 eAgent() { # Main function
 	
 	local -i LOCKER_STATE=0
