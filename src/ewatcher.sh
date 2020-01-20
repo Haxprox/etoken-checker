@@ -24,7 +24,7 @@ help() {
 	echo "-l, --lock	Just call DE locker and nothing more. PAM pre-installed authentication is expected here."
 	echo "-k, --knlock	Kill everything that related to the 2FA device and lock."
 	echo "-o, --logout	Kill everything that related to the 2FA device and logout."
-	echo "-p, --power	Poweroff the mainframe till next time :D"
+	echo "-p, --power	Poweroff/reboot the mainframe till next time :D"
 	echo "-c, --check	Check whether the libraries are pre-installed."
 	echo
 	return 0
@@ -113,9 +113,13 @@ eScreenLocker() { # Session locker or logout caller
 	return 0
 }
 
-ePower() {
+ePower() { #Power management behaivor when eToken is offline. The disk should be encrypted by default in order to have this reasonable.
 	
-	#Power management when Token is offline. The disk should be encrypted by default in order to have this reasonable.
+	if [[ "$1" == "--reboot" || "$1" == "-r" ]]; then
+		sudo /sbin/reboot
+	else
+		sudo /sbin/poweroff
+	fi
 	return 0
 }
 
