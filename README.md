@@ -44,7 +44,7 @@ Supported distros and environments:
 |   Bunsenlabs	 |  -  |  -  |  -  |  -  |  -  |  -  |  -  |
 |	Mint		 |  -  |  -  |  ❔  |  ❔  |  ❔  |  -  |  -  |
 |	Manjaro		 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
-|	MX-Linux	 |  -  |  -  |  -  |  -  |  A:heavy_check_mark:S❌  |  -  |  -  |
+|	MX-Linux 19	 |  -  |  -  |  -  |  -  |  A:heavy_check_mark:S❌  |  -  |  -  |
 |   Fedora 29	 |  ❔  |A:heavy_check_mark:️S:heavy_check_mark:️|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |   Fedora 30	 |  ❔  |A:heavy_check_mark:️S:heavy_check_mark:️|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |   Fedora 31	 |  ❔  |A:heavy_check_mark:️S:heavy_check_mark:️|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |

@@ -24,6 +24,7 @@ help() {
 	echo "-l, --lock	Just call DE locker and nothing more. PAM pre-installed authentication is expected here."
 	echo "-k, --knlock	Kill everything that related to the 2FA device and lock."
 	echo "-o, --logout	Kill everything that related to the 2FA device and logout."
+	echo "-p, --power	Poweroff the mainframe till next time :D"
 	echo "-c, --check	Check whether the libraries are pre-installed."
 	echo
 	return 0
@@ -148,6 +149,14 @@ eAgent() { # Main function
 						LOCKER_STATE=1
 						pKiller; eScreenLocker --logout
 					;;
+					-p | --power)
+						LOCKER_STATE=1
+						pKiller; ePower
+					;;
+					-r | --reboot)
+						LOCKER_STATE=1
+						pKiller; ePower --reboot
+					;;
 					*)
 						echo "\e[102mInvalid option\e[0m"
 						exit 255
@@ -177,6 +186,14 @@ if pFinder; then # Check whether the libraries are pre-installed.
 		-o | --logout)
 			# eSaveSession
 			eAgent --logout
+		;;
+		-p | --power)
+			# eSaveSession
+			eAgent --power
+		;;
+		-r | --reboot)
+			# eSaveSession
+			eAgent --reboot
 		;;
 		-s | --showp)
 			pFinder --showp
