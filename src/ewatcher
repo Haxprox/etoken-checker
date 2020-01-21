@@ -1,2 +1,2 @@
-changeme    ALL = NOPASSWD: /usr/bin/kill, /usr/bin/loginctl, /usr/bin/veracrypt, /sbin/poweroff, /sbin/poweroff
+changeme    ALL = NOPASSWD: /usr/bin/kill, /usr/bin/loginctl, /usr/bin/veracrypt, /sbin/poweroff, /sbin/reboot
 

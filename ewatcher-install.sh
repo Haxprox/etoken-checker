@@ -100,7 +100,7 @@ eInit() { # $1 -> ID variable should be here
 		sed -i "s/changeme/$currentUser/" etoken-checker/src/ewatcher && \
 		echo -e "\e[91mPlease, select which of the existed parameters you want to use:\e[0m"
 		help
-		select parameter in --nolock --lock --knlock --logout; do
+		select parameter in --nolock --lock --knlock --logout --power --reboot; do
 			if [[ $2 == "--systemd" ]]; then
 				sed -i "/User=/c User=$currentUser" etoken-checker/src/ewatcher.service && \
 				sed -i "/Group=/c User=$ownGroup" etoken-checker/src/ewatcher.service
@@ -118,6 +118,14 @@ eInit() { # $1 -> ID variable should be here
 						break
 					;;				
 					--logout)
+						sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service && \
+						break
+					;;
+					--power)
+						sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service && \
+						break
+					;;
+					--reboot)
 						sed -i "/ExecStart=ewatcher.sh/c ExecStart=ewatcher.sh $parameter" etoken-checker/src/ewatcher.service && \
 						break
 					;;
@@ -144,6 +152,16 @@ eInit() { # $1 -> ID variable should be here
 						break
 					;;				
 					--logout)
+						sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop && \
+						EWATCHER_PARAMETER=$parameter
+						break
+					;;
+					--power)
+						sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop && \
+						EWATCHER_PARAMETER=$parameter
+						break
+					;;
+					--reboot)
 						sed -i "/ewatcher.sh/c Exec=bash .config/autostart/ewatcher.sh $parameter &" etoken-checker/src/ewatcher.desktop && \
 						EWATCHER_PARAMETER=$parameter
 						break
