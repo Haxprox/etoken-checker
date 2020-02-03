@@ -42,7 +42,7 @@ Supported distros and environments:
 |   CentOS 7	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |   Debian 10	 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |   Bunsenlabs	 |  -  |  -  |  -  |  -  |  -  |  -  |  -  |
-|	Mint		 |  -  |  -  |  ❔  |  ❔  |  ❔  |  -  |  -  |
+|	Mint		 |  -  |  -  |  ❔  |  ❔  | A:heavy_check_mark:️S:heavy_check_mark:️ |  -  |  -  |
 |	Manjaro		 |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
 |	MX-Linux 19	 |  -  |  -  |  -  |  -  |  A:heavy_check_mark:S❌  |  -  |  -  |
 |   Fedora 29	 |  ❔  |A:heavy_check_mark:️S:heavy_check_mark:️|  ❔  |  ❔  |  ❔  |  ❔  |  ❔  |
